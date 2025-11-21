@@ -35,20 +35,22 @@ function Upload() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Upload Exam Paper</h1>
+    <div className="max-w-2xl mx-auto px-6 py-12">
+      <h1 className="text-4xl font-bold text-white mb-8 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+        Upload Exam Paper
+      </h1>
       <FileUpload onFileSelect={handleFileSelect} />
       
       {uploading && (
-        <div className="mt-4 text-center text-gray-600">Uploading...</div>
+        <div className="mt-4 text-center text-gray-400">Uploading...</div>
       )}
       
       {uploadStatus && (
         <div
-          className={`mt-4 p-4 rounded ${
+          className={`mt-4 p-4 rounded-xl border ${
             uploadStatus.success
-              ? 'bg-green-100 text-green-700'
-              : 'bg-red-100 text-red-700'
+              ? 'bg-green-500/10 text-green-400 border-green-500/30'
+              : 'bg-red-500/10 text-red-400 border-red-500/30'
           }`}
         >
           {uploadStatus.message}

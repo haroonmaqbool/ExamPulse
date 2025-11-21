@@ -29,41 +29,46 @@ function SmartPlan() {
   }, [])
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Smart Exam Plan</h1>
+    <div className="max-w-4xl mx-auto px-6 py-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          Smart Exam Plan
+        </h1>
         <button
           onClick={fetchSmartPlan}
           disabled={loading}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+          className="relative px-6 py-3 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
         >
-          {loading ? 'Loading...' : 'Refresh Plan'}
+          <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600" />
+          <span className="relative">
+            {loading ? 'Loading...' : 'Refresh Plan'}
+          </span>
         </button>
       </div>
 
       {loading ? (
-        <div className="text-center py-12">Loading smart plan...</div>
+        <div className="text-center py-12 text-gray-400">Loading smart plan...</div>
       ) : plan ? (
         <div className="space-y-6">
           <PlanCard plan={plan} />
           
           {plan.confidence_percentage !== undefined && (
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-lg font-semibold mb-2">Confidence Level</h3>
-              <div className="w-full bg-gray-200 rounded-full h-4">
+            <div className="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 p-8">
+              <h3 className="text-xl font-bold text-white mb-4">Confidence Level</h3>
+              <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
                 <div
-                  className="bg-blue-600 h-4 rounded-full"
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500"
                   style={{ width: `${plan.confidence_percentage}%` }}
                 ></div>
               </div>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-gray-400 mt-3">
                 {plan.confidence_percentage}% confidence
               </p>
             </div>
           )}
         </div>
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow text-center text-gray-600">
+        <div className="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 p-8 text-center text-gray-400">
           No smart plan available. Upload papers and create study logs to generate a plan.
         </div>
       )}

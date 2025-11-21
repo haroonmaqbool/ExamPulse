@@ -46,12 +46,14 @@ function StudyLogs() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Study Logs</h1>
+    <div className="max-w-2xl mx-auto px-6 py-12">
+      <h1 className="text-4xl font-bold text-white mb-8 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+        Study Logs
+      </h1>
       
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow space-y-4">
+      <form onSubmit={handleSubmit} className="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 p-8 space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
             Topic
           </label>
           <input
@@ -60,49 +62,50 @@ function StudyLogs() {
             value={formData.topic}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            placeholder="Enter topic name"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
             Log Type
           </label>
           <select
             name="log_type"
             value={formData.log_type}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
           >
-            <option value="text">Text</option>
-            <option value="hours">Hours</option>
-            <option value="difficulty">Difficulty</option>
-            <option value="checkbox">Checkbox</option>
+            <option value="text" className="bg-gray-900">Text</option>
+            <option value="hours" className="bg-gray-900">Hours</option>
+            <option value="difficulty" className="bg-gray-900">Difficulty</option>
+            <option value="checkbox" className="bg-gray-900">Checkbox</option>
           </select>
         </div>
 
         {formData.log_type === 'difficulty' && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Difficulty
             </label>
             <select
               name="difficulty"
               value={formData.difficulty}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
             >
-              <option value="">Select difficulty</option>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
+              <option value="" className="bg-gray-900">Select difficulty</option>
+              <option value="easy" className="bg-gray-900">Easy</option>
+              <option value="medium" className="bg-gray-900">Medium</option>
+              <option value="hard" className="bg-gray-900">Hard</option>
             </select>
           </div>
         )}
 
         {formData.log_type === 'hours' && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Hours
             </label>
             <input
@@ -112,13 +115,14 @@ function StudyLogs() {
               onChange={handleChange}
               step="0.5"
               min="0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+              placeholder="0.0"
             />
           </div>
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
             Notes
           </label>
           <textarea
@@ -126,24 +130,28 @@ function StudyLogs() {
             value={formData.notes}
             onChange={handleChange}
             rows="4"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
+            placeholder="Add your notes here..."
           />
         </div>
 
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+          className="relative w-full px-6 py-4 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
         >
-          {submitting ? 'Submitting...' : 'Create Study Log'}
+          <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600" />
+          <span className="relative">
+            {submitting ? 'Submitting...' : 'Create Study Log'}
+          </span>
         </button>
 
         {submitStatus && (
           <div
-            className={`p-4 rounded ${
+            className={`p-4 rounded-xl border ${
               submitStatus.success
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
+                ? 'bg-green-500/10 text-green-400 border-green-500/30'
+                : 'bg-red-500/10 text-red-400 border-red-500/30'
             }`}
           >
             {submitStatus.message}
