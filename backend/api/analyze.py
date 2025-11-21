@@ -9,16 +9,19 @@ from typing import Dict, List
 from collections import Counter
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
 from core.ocr import run_ocr
 from core.question_extractor import extract_questions
 from core.ai_client import ai_client
 from utils.database import db
 
+load_dotenv()
+
 router = APIRouter()
 
-# Upload directory (should match upload.py)
-UPLOAD_DIR = Path("./uploads")
+# Upload directory (configurable via .env, defaults to ./uploads)
+UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", "./uploads"))
 
 
 class AnalyzeRequest(BaseModel):

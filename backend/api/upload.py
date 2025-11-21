@@ -8,11 +8,14 @@ import uuid
 from pathlib import Path
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from typing import Dict
+from dotenv import load_dotenv
+
+load_dotenv()
 
 router = APIRouter()
 
-# Upload directory
-UPLOAD_DIR = Path("./uploads")
+# Upload directory (configurable via .env, defaults to ./uploads)
+UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", "./uploads"))
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 # Allowed file types
