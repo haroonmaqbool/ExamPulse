@@ -6,6 +6,7 @@ function Navbar() {
   const location = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
+  const isDarkMode = theme === 'dark'
   const isActive = (path) => location.pathname === path
 
   const navLinks = [
@@ -18,7 +19,11 @@ function Navbar() {
   ]
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-white/80 dark:bg-black/40 backdrop-blur-xl border-b border-gray-200 dark:border-white/5">
+    <header className={`fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b transition-colors duration-300 ${
+      isDarkMode 
+        ? 'bg-black/40 border-white/5' 
+        : 'bg-white/80 border-gray-200'
+    }`}>
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-8 h-20">
         {/* Brand with gradient */}
         <Link 
@@ -37,26 +42,37 @@ function Navbar() {
               to={link.path}
               className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg group ${
                 isActive(link.path)
-                  ? 'text-gray-900 dark:text-white'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  ? isDarkMode ? 'text-white' : 'text-gray-900'
+                  : isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'
               }`}
             >
               <span className="relative z-10">{link.label}</span>
               {isActive(link.path) ? (
-                <span className="absolute inset-0 bg-gray-200 dark:bg-gradient-to-r dark:from-purple-600/20 dark:to-pink-600/20 rounded-lg border border-gray-300 dark:border-purple-500/30" />
+                <span className={`absolute inset-0 rounded-lg border ${
+                  isDarkMode 
+                    ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 border-purple-500/30' 
+                    : 'bg-gray-200 border-gray-300'
+                }`} />
               ) : (
-                <span className="absolute inset-0 bg-transparent group-hover:bg-gray-200/60 dark:group-hover:bg-white/5 rounded-lg transition-colors duration-300" />
+                <span className={`absolute inset-0 rounded-lg transition-colors duration-300 ${
+                  isDarkMode ? 'group-hover:bg-white/5' : 'group-hover:bg-gray-200/60'
+                }`} />
               )}
             </Link>
           ))}
+          
           {/* Theme Toggle Button */}
           <button 
             onClick={toggleTheme}
-            className="ml-4 relative w-14 h-7 flex items-center bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className={`ml-4 relative w-14 h-7 flex items-center rounded-full cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 ${
+              isDarkMode ? 'bg-gray-700' : 'bg-gray-200'
+            }`}
             aria-label="Toggle light and dark mode"
           >
-            <span className={`w-5 h-5 absolute left-1 top-1 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out flex items-center justify-center ${theme === 'dark' ? 'translate-x-7' : 'translate-x-0'}`}>
-              {theme === 'dark' ? (
+            <span className={`w-5 h-5 absolute left-1 top-1 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out flex items-center justify-center ${
+              isDarkMode ? 'translate-x-7' : 'translate-x-0'
+            }`}>
+              {isDarkMode ? (
                 // Moon Icon
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
@@ -74,7 +90,11 @@ function Navbar() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden relative p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200/60 dark:hover:bg-white/5 transition-all duration-300"
+          className={`md:hidden relative p-2 rounded-lg transition-all duration-300 ${
+            isDarkMode 
+              ? 'text-gray-400 hover:text-white hover:bg-white/5' 
+              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/60'
+          }`}
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
         >
@@ -97,7 +117,13 @@ function Navbar() {
       </nav>
 
       {/* Mobile Navigation Dropdown */}
-      <div className={`md:hidden border-t border-gray-200 dark:border-white/5 bg-white/95 dark:bg-black/80 backdrop-blur-xl transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-screen' : 'max-h-0 overflow-hidden'}`}>
+      <div className={`md:hidden border-t backdrop-blur-xl transition-all duration-300 ease-in-out ${
+        isMenuOpen ? 'max-h-screen' : 'max-h-0 overflow-hidden'
+      } ${
+        isDarkMode 
+          ? 'border-white/5 bg-black/80' 
+          : 'border-gray-200 bg-white/95'
+      }`}>
         {isMenuOpen && (
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex flex-col space-y-1">
@@ -108,8 +134,12 @@ function Navbar() {
                   onClick={() => setIsMenuOpen(false)}
                   className={`px-4 py-3 text-base font-medium rounded-lg transition-all duration-300 ${
                     isActive(link.path)
-                      ? 'text-gray-900 dark:text-white bg-gray-200 dark:bg-gradient-to-r dark:from-purple-600/20 dark:to-pink-600/20 border border-gray-300 dark:border-purple-500/30'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200/60 dark:hover:bg-white/5'
+                      ? isDarkMode 
+                        ? 'text-white bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30'
+                        : 'text-gray-900 bg-gray-200 border border-gray-300'
+                      : isDarkMode
+                        ? 'text-gray-400 hover:text-white hover:bg-white/5'
+                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/60'
                   }`}
                 >
                   {link.label}
