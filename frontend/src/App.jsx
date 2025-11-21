@@ -7,38 +7,41 @@ import ExpectedPaper from './pages/ExpectedPaper'
 import StudyLogs from './pages/StudyLogs'
 import SmartPlan from './pages/SmartPlan'
 import LandingPage from './pages/LandingPage'
-
-/**
- * AppLayout provides the common structure for the main application,
- * including the Navbar and the main content area.
- */
-const AppLayout = () => {
-  return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Navbar />
-      <main>
-        <Outlet /> {/* Child routes will render here */}
-      </main>
-    </div>
-  )
-}
+import { ThemeProvider } from './components/ThemeContext'
 
 function App() {
-  return (
-    <Routes>
-      {/* Route for the landing page, which doesn't have the main Navbar */}
-      <Route path="/" element={<LandingPage />} />
+  /**
+   * AppLayout provides the common structure for the main application.
+   * It's defined inside App so it has access to the ThemeProvider context.
+   */
+  const AppLayout = () => {
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-[#0a0a0a]">
+        <Navbar />
+        <main>
+          <Outlet /> {/* Child routes will render here */}
+        </main>
+      </div>
+    );
+  };
 
-      {/* Nested routes for the main application, which all share the AppLayout */}
-      <Route element={<AppLayout />}>
-        <Route path="/home" element={<Home />} />
-        <Route path="/upload" element={<Upload />} />
-        <Route path="/analysis" element={<Analysis />} />
-        <Route path="/expected-paper" element={<ExpectedPaper />} />
-        <Route path="/study-logs" element={<StudyLogs />} />
-        <Route path="/smart-plan" element={<SmartPlan />} />
-      </Route>
-    </Routes>
+  return (
+    <ThemeProvider>
+      <Routes>
+        {/* Route for the landing page, which doesn't have the main Navbar */}
+        <Route path="/" element={<LandingPage />} />
+
+        {/* Nested routes for the main application, which all share the AppLayout */}
+        <Route element={<AppLayout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/expected-paper" element={<ExpectedPaper />} />
+          <Route path="/study-logs" element={<StudyLogs />} />
+          <Route path="/smart-plan" element={<SmartPlan />} />
+        </Route>
+      </Routes>
+    </ThemeProvider>
   )
 }
 
