@@ -60,3 +60,4 @@ uploads/
 # Cursor
 .cursor/rules/kluster-code-verify.mdc
 .kluster
+.cursor/rules/ExamPulse_Cursor_Project_Rules.txt
