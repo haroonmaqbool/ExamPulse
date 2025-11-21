@@ -97,7 +97,7 @@ Question text:
 """
             
             # Call AI for classification
-            ai_response = ai_client.run_gemini_prompt(
+            ai_response = ai_client.run_ai_prompt(
                 classification_prompt,
                 system_instruction="You are an expert at classifying exam questions. Return only valid JSON.",
                 response_format="json"

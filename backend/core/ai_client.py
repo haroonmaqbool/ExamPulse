@@ -1,7 +1,7 @@
 """
 AI Client Module
 Handles all AI interactions via OpenRouter (Grok 4.1 Fast).
-All LLM calls must go through ai_client.run_gemini_prompt().
+All LLM calls must go through ai_client.run_ai_prompt().
 """
 
 from typing import Dict, Any, Optional
@@ -30,7 +30,7 @@ class AIClient:
         # Model name for Grok 4.1 Fast (free)
         self.model_name = "x-ai/grok-4.1-fast:free"
     
-    def run_gemini_prompt(
+    def run_ai_prompt(
         self, 
         prompt: str, 
         system_instruction: Optional[str] = None,

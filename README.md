@@ -6,21 +6,27 @@ FastAPI backend server for the ExamPulse AI-powered exam preparation platform.
 
 1. Install dependencies:
 ```bash
+cd backend
 pip install -r requirements.txt
 ```
 
 2. Set up environment variables:
 ```bash
-# Create .env file
-GEMINI_API_KEY=your_gemini_api_key
+# Create .env file in backend/ directory
+OPENROUTER_API_KEY=your_openrouter_api_key
 SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_key
+UPLOAD_DIR=./uploads
+MAX_FILE_SIZE=10485760
 ```
 
 3. Run the server:
 ```bash
-uvicorn app.main:app --reload
+cd backend
+uvicorn main:app --reload
 ```
+
+Server will run on `http://localhost:8000`
 
 ## API Endpoints
 
@@ -30,18 +36,44 @@ uvicorn app.main:app --reload
 - `POST /expected-paper/` - Generate expected paper
 - `POST /study-logs/` - Create study log entry
 - `GET /smart-plan/` - Get smart exam plan
+- `POST /chatbot/` - Chat with AI assistant
+
+## API Documentation
+
+FastAPI automatically generates interactive API documentation:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
 
 ## Project Structure
 
 ```
 backend/
-  app/
-    api/          # API route handlers
-    core/         # Business logic (AI, OCR, question extraction)
-    utils/        # Utilities (database, helpers)
-    models/       # Pydantic schemas
-    main.py       # FastAPI app entry point
+  api/            # API route handlers
+    ├── upload.py
+    ├── analyze.py
+    ├── expected_paper.py
+    ├── study_logs.py
+    ├── smart_plan.py
+    ├── chatbot.py
+    └── health.py
+  core/           # Business logic
+    ├── ai_client.py      # OpenRouter/Grok AI integration
+    ├── ocr.py            # OCR (PyMuPDF + Tesseract)
+    └── question_extractor.py
+  utils/          # Utilities
+    └── database.py       # Supabase database client
+  models/         # Pydantic schemas
+    └── schemas.py
+  main.py         # FastAPI app entry point
   requirements.txt
   README.md
 ```
+
+## Tech Stack
+
+- **Framework:** FastAPI
+- **AI:** OpenRouter (Grok 4.1 Fast)
+- **OCR:** PyMuPDF (PDFs) + Tesseract (Images)
+- **Database:** Supabase
+- **Language:** Python 3.9+
 

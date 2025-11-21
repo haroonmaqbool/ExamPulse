@@ -153,7 +153,7 @@ Return ONLY valid JSON (no markdown, no code blocks, just JSON) with this exact 
         
         # Step 7: Call AI to generate plan
         print("Generating smart plan with AI...")
-        ai_response = ai_client.run_gemini_prompt(
+        ai_response = ai_client.run_ai_prompt(
             ai_prompt,
             system_instruction="You are an expert study planner. Generate personalized, actionable study plans based on exam analysis and study logs. Return only valid JSON.",
             response_format="json"

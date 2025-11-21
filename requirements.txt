@@ -5,13 +5,10 @@ fastapi==0.104.1
 uvicorn[standard]==0.24.0
 python-multipart==0.0.6
 
-# AI and ML
-google-generativeai==0.3.2
-
 # OCR
 pytesseract==0.3.10
 Pillow==10.1.0
-PyMuPDF==1.23.0  # PDF text extraction (no Poppler needed)
+PyMuPDF==1.26.5  # PDF text extraction (no Poppler needed)
 
 # Database
 supabase==2.0.3
@@ -20,5 +17,5 @@ supabase==2.0.3
 python-dotenv==1.0.0
 pydantic==2.5.0
 requests==2.31.0
-httpx==0.25.2
+httpx==0.25.2  # For chatbot endpoint
 

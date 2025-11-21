@@ -112,7 +112,7 @@ Generate exactly 20 questions (or fewer if topic frequencies suggest fewer quest
         
         # Step 4: Call AI to generate expected paper
         print("Generating expected paper with AI...")
-        ai_response = ai_client.run_gemini_prompt(
+        ai_response = ai_client.run_ai_prompt(
             ai_prompt,
             system_instruction="You are an expert at creating exam papers. Generate realistic exam questions based on topic frequencies. Return only valid JSON.",
             response_format="json"
