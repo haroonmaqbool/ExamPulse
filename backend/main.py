@@ -6,7 +6,7 @@ Entry point for the FastAPI server with CORS and route registration.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import upload, analyze, expected_paper, study_logs, smart_plan, health
+from api import upload, analyze, expected_paper, study_logs, smart_plan, health
 
 app = FastAPI(
     title="ExamPulse API",

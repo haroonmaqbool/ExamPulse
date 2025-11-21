@@ -58,6 +58,7 @@ uploads/
 *.jpeg
 
 # Cursor
-.cursor/rules/kluster-code-verify.mdc
+.cursor/rules/
 .kluster
+.cursor/rules/kluster-code-verify.mdc
 .cursor/rules/ExamPulse_Cursor_Project_Rules.txt

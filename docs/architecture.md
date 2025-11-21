@@ -41,16 +41,15 @@ ExamPulse is an AI-powered exam preparation platform built as a monorepo with a 
 
 ```
 backend/
-  app/
-    api/          # Route handlers
-    core/         # Business logic
-      - ai_client.py      # Gemini AI client
-      - ocr.py            # OCR processing
-      - question_extractor.py
-    utils/        # Utilities
-      - database.py       # Supabase client
-    models/       # Pydantic schemas
-    main.py       # FastAPI app
+  api/          # Route handlers
+  core/         # Business logic
+    - ai_client.py      # Gemini AI client
+    - ocr.py            # OCR processing
+    - question_extractor.py
+  utils/        # Utilities
+    - database.py       # Supabase client
+  models/       # Pydantic schemas
+  main.py       # FastAPI app
 ```
 
 ## Frontend Structure
