@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '../components/ThemeContext';
+import { Link } from 'react-router-dom';
 
 export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
@@ -83,13 +84,13 @@ export default function LandingPage() {
                   {theme === 'dark' ? <span className="text-xs">🌙</span> : <span className="text-xs">☀️</span>}
                 </div>
               </button>
-              <button className={`px-6 py-2 rounded-lg font-semibold transition transform hover:scale-105 ${
+              <Link to="/home" className={`px-6 py-2 rounded-lg font-semibold transition transform hover:scale-105 text-center ${
                 theme === 'dark'
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:shadow-[0_0_40px_rgba(168,85,247,0.4)]'
                   : 'bg-gradient-to-r from-blue-500 to-green-500 text-white hover:shadow-lg'
               }`}>
                 Get Started
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -122,13 +123,13 @@ export default function LandingPage() {
               ExamPulse uses advanced AI to analyze past papers, predict exam patterns, and create personalized study plans tailored to your needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className={`px-8 py-4 rounded-lg font-semibold text-lg transition transform hover:scale-105 ${
+              <Link to="/home" className={`px-8 py-4 rounded-lg font-semibold text-lg transition transform hover:scale-105 text-center ${
                 theme === 'dark'
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:shadow-[0_0_40px_rgba(168,85,247,0.4)]'
                   : 'bg-gradient-to-r from-blue-500 to-green-500 text-white hover:shadow-xl'
               }`}>
                 Start Analyzing Papers
-              </button>
+              </Link>
             </div>
 
             {/* Stats */}
