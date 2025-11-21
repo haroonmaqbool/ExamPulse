@@ -3,8 +3,13 @@ Database utilities
 Handles Supabase connection and operations.
 """
 
-from typing import Optional
+from typing import Optional, List, Dict, Any
 import os
+from dotenv import load_dotenv
+from supabase import create_client, Client
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 class Database:
@@ -12,9 +17,14 @@ class Database:
     
     def __init__(self):
         """Initialize Supabase connection"""
-        # TODO: Initialize Supabase client
         self.url = os.getenv("SUPABASE_URL", "")
         self.key = os.getenv("SUPABASE_KEY", "")
+        
+        if not self.url or not self.key:
+            raise ValueError("SUPABASE_URL and SUPABASE_KEY must be set in .env file")
+        
+        # Create Supabase client
+        self.client: Client = create_client(self.url, self.key)
     
     def insert_question(self, question_data: dict) -> Optional[dict]:
         """
@@ -28,8 +38,14 @@ class Database:
         Returns:
             Inserted question record
         """
-        # TODO: Implement Supabase insert
-        return None
+        try:
+            response = self.client.table("questions").insert(question_data).execute()
+            if response.data:
+                return response.data[0]
+            return None
+        except Exception as e:
+            print(f"Error inserting question: {e}")
+            return None
     
     def insert_study_log(self, log_data: dict) -> Optional[dict]:
         """
@@ -43,8 +59,14 @@ class Database:
         Returns:
             Inserted study log record
         """
-        # TODO: Implement Supabase insert
-        return None
+        try:
+            response = self.client.table("study_logs").insert(log_data).execute()
+            if response.data:
+                return response.data[0]
+            return None
+        except Exception as e:
+            print(f"Error inserting study log: {e}")
+            return None
     
     def insert_plan(self, plan_data: dict) -> Optional[dict]:
         """
@@ -53,13 +75,69 @@ class Database:
         Schema: plans(id, plan_json, created_at)
         
         Args:
-            plan_data: Dictionary with plan fields
+            plan_data: Dictionary with plan fields (must include 'plan_json')
         
         Returns:
             Inserted plan record
         """
-        # TODO: Implement Supabase insert
-        return None
+        try:
+            response = self.client.table("plans").insert(plan_data).execute()
+            if response.data:
+                return response.data[0]
+            return None
+        except Exception as e:
+            print(f"Error inserting plan: {e}")
+            return None
+    
+    def get_all_questions(self) -> List[Dict[str, Any]]:
+        """
+        Get all questions from the database.
+        
+        Returns:
+            List of all questions
+        """
+        try:
+            response = self.client.table("questions").select("*").execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error fetching questions: {e}")
+            return []
+    
+    def get_all_study_logs(self) -> List[Dict[str, Any]]:
+        """
+        Get all study logs from the database.
+        
+        Returns:
+            List of all study logs
+        """
+        try:
+            response = self.client.table("study_logs").select("*").execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error fetching study logs: {e}")
+            return []
+    
+    def get_latest_plan(self) -> Optional[Dict[str, Any]]:
+        """
+        Get the most recent plan from the database.
+        
+        Returns:
+            Latest plan record or None
+        """
+        try:
+            response = (
+                self.client.table("plans")
+                .select("*")
+                .order("created_at", desc=True)
+                .limit(1)
+                .execute()
+            )
+            if response.data and len(response.data) > 0:
+                return response.data[0]
+            return None
+        except Exception as e:
+            print(f"Error fetching latest plan: {e}")
+            return None
 
 
 # Singleton instance

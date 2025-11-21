@@ -20,7 +20,7 @@ async def analyze_paper(request: AnalyzeRequest):
     Analyze uploaded paper:
     1. Run Hybrid OCR (Tesseract → Mock fallback)
     2. Extract questions
-    3. Use Gemini AI for classification (topic, type, marks, question number)
+    3. Use AI for classification (topic, type, marks, question number)
     4. Compute topic frequencies
     
     Returns:
@@ -30,7 +30,7 @@ async def analyze_paper(request: AnalyzeRequest):
     # - Load file from file_id
     # - Run OCR (Tesseract with mock fallback)
     # - Extract questions
-    # - Call Gemini AI for classification
+    # - Call AI for classification
     # - Compute topic frequencies
     # - Store in Supabase
     return {

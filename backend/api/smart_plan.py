@@ -11,7 +11,7 @@ router = APIRouter()
 @router.get("/")
 async def get_smart_plan():
     """
-    Generate Smart Exam Plan using Gemini AI.
+    Generate Smart Exam Plan using AI.
     
     Plan includes:
         - Priorities
@@ -25,7 +25,7 @@ async def get_smart_plan():
     """
     # TODO: Implement smart plan generation
     # - Load study logs and analysis data
-    # - Use Gemini AI to generate personalized plan
+    # - Use AI to generate personalized plan
     # - Return plan with priorities, weaknesses, next steps, revision plan, confidence %
     return {
         "message": "Smart plan endpoint - placeholder",

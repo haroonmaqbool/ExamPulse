@@ -17,7 +17,7 @@ class ExpectedPaperRequest(BaseModel):
 @router.post("/")
 async def generate_expected_paper(request: ExpectedPaperRequest):
     """
-    Generate expected exam paper using Gemini AI.
+    Generate expected exam paper using AI.
     
     Constraints:
         - Maximum 20 questions
@@ -28,7 +28,7 @@ async def generate_expected_paper(request: ExpectedPaperRequest):
     """
     # TODO: Implement expected paper generation
     # - Load analysis results
-    # - Use Gemini AI to generate expected paper (max 20 questions)
+    # - Use AI to generate expected paper (max 20 questions)
     # - Return expected paper
     return {
         "message": "Expected paper endpoint - placeholder",
