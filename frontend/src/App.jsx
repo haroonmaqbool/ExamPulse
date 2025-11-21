@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Outlet } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Upload from './pages/Upload'
@@ -6,24 +6,40 @@ import Analysis from './pages/Analysis'
 import ExpectedPaper from './pages/ExpectedPaper'
 import StudyLogs from './pages/StudyLogs'
 import SmartPlan from './pages/SmartPlan'
+import LandingPage from './pages/LandingPage'
 
-function App() {
+/**
+ * AppLayout provides the common structure for the main application,
+ * including the Navbar and the main content area.
+ */
+const AppLayout = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
       <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/upload" element={<Upload />} />
-          <Route path="/analysis" element={<Analysis />} />
-          <Route path="/expected-paper" element={<ExpectedPaper />} />
-          <Route path="/study-logs" element={<StudyLogs />} />
-          <Route path="/smart-plan" element={<SmartPlan />} />
-        </Routes>
+        <Outlet /> {/* Child routes will render here */}
       </main>
     </div>
   )
 }
 
-export default App
+function App() {
+  return (
+    <Routes>
+      {/* Route for the landing page, which doesn't have the main Navbar */}
+      <Route path="/" element={<LandingPage />} />
 
+      {/* Nested routes for the main application, which all share the AppLayout */}
+      <Route element={<AppLayout />}>
+        <Route path="/home" element={<Home />} />
+        <Route path="/upload" element={<Upload />} />
+        <Route path="/analysis" element={<Analysis />} />
+        <Route path="/expected-paper" element={<ExpectedPaper />} />
+        <Route path="/study-logs" element={<StudyLogs />} />
+        <Route path="/smart-plan" element={<SmartPlan />} />
+      </Route>
+    </Routes>
+  )
+}
+
+export default App

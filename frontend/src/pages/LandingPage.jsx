@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function LandingPage() {
   const [isHovered, setIsHovered] = useState(null);
@@ -62,9 +63,9 @@ export default function LandingPage() {
               <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition">How It Works</a>
               <a href="#about" className="text-gray-700 hover:text-blue-600 transition">About</a>
             </div>
-            <button className="bg-gradient-to-r from-blue-500 to-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition transform hover:scale-105">
+            <Link to="/home" className="bg-gradient-to-r from-blue-500 to-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition transform hover:scale-105">
               Get Started
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -86,9 +87,9 @@ export default function LandingPage() {
               ExamPulse uses advanced AI to analyze past papers, predict exam patterns, and create personalized study plans tailored to your needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-gradient-to-r from-blue-500 to-green-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transition transform hover:scale-105">
+              <Link to="/home" className="bg-gradient-to-r from-blue-500 to-green-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transition transform hover:scale-105 text-center">
                 Start Analyzing Papers
-              </button>
+              </Link>
               <button className="bg-white text-gray-700 px-8 py-4 rounded-lg font-semibold text-lg border-2 border-gray-200 hover:border-blue-500 transition">
                 Watch Demo
               </button>
@@ -216,9 +217,9 @@ export default function LandingPage() {
           <p className="text-xl text-blue-100 mb-8">
             Join thousands of students who are studying smarter with ExamPulse
           </p>
-          <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-2xl transition transform hover:scale-105">
+          <Link to="/home" className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-2xl transition transform hover:scale-105">
             Get Started Free
-          </button>
+          </Link>
         </div>
       </section>
 
