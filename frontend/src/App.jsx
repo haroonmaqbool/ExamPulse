@@ -30,7 +30,7 @@ function App() {
       <Routes>
         {/* Route for the landing page, which doesn't have the main Navbar */}
         <Route path="/" element={<LandingPage />} />
-
+        
         {/* Nested routes for the main application, which all share the AppLayout */}
         <Route element={<AppLayout />}>
           <Route path="/home" element={<Home />} />
