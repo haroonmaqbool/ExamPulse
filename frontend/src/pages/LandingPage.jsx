@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function LandingPage() {
   const [isHovered, setIsHovered] = useState(null);
-
+  const [isSliderToggled, setIsSliderToggled] = useState(false);
+  
   const features = [
     {
       icon: "📊",
@@ -62,9 +64,31 @@ export default function LandingPage() {
               <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition">How It Works</a>
               <a href="#about" className="text-gray-700 hover:text-blue-600 transition">About</a>
             </div>
-            <button className="bg-gradient-to-r from-blue-500 to-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition transform hover:scale-105">
-              Get Started
-            </button>
+            <div className="flex items-center gap-4">
+              <Link to="/home" className="bg-gradient-to-r from-blue-500 to-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition transform hover:scale-105">
+                Get Started
+              </Link>
+              {/* Theme Toggle Button */}
+              <button 
+                onClick={() => setIsSliderToggled(!isSliderToggled)}
+                className={`relative w-14 h-7 flex items-center ${isSliderToggled ? 'bg-gray-700' : 'bg-gray-200'} rounded-full cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                aria-label="Toggle light and dark mode"
+              >
+                <span className={`w-5 h-5 absolute left-1 top-1 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out flex items-center justify-center ${isSliderToggled ? 'translate-x-7' : 'translate-x-0'}`}>
+                  {isSliderToggled ? (
+                    // Moon Icon
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                    </svg>
+                  ) : (
+                    // Sun Icon
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 7.072l.707-.707a1 1 0 10-1.414-1.414l-.707.707a1 1 0 001.414 1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -86,9 +110,9 @@ export default function LandingPage() {
               ExamPulse uses advanced AI to analyze past papers, predict exam patterns, and create personalized study plans tailored to your needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-gradient-to-r from-blue-500 to-green-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transition transform hover:scale-105">
+              <Link to="/home" className="bg-gradient-to-r from-blue-500 to-green-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transition transform hover:scale-105 text-center">
                 Start Analyzing Papers
-              </button>
+              </Link>
               <button className="bg-white text-gray-700 px-8 py-4 rounded-lg font-semibold text-lg border-2 border-gray-200 hover:border-blue-500 transition">
                 Watch Demo
               </button>
@@ -216,9 +240,9 @@ export default function LandingPage() {
           <p className="text-xl text-blue-100 mb-8">
             Join thousands of students who are studying smarter with ExamPulse
           </p>
-          <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-2xl transition transform hover:scale-105">
+          <Link to="/home" className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-2xl transition transform hover:scale-105">
             Get Started Free
-          </button>
+          </Link>
         </div>
       </section>
 
