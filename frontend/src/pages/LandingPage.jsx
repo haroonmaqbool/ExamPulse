@@ -1,13 +1,10 @@
 import { useState } from 'react';
+import { useTheme } from '../components/ThemeContext';
 
 export default function LandingPage() {
+  const { theme, toggleTheme } = useTheme();
   const [isHovered, setIsHovered] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
+  
   const features = [
     {
       icon: "📊",
@@ -50,12 +47,12 @@ export default function LandingPage() {
 
   return (
     <div className={`min-h-screen transition-colors duration-500 ${
-      isDarkMode 
+      theme === 'dark'
         ? 'bg-[#0a0a0a]' 
         : 'bg-gradient-to-br from-blue-50 via-white to-green-50'
     }`}>
       {/* Animated gradient background for dark mode */}
-      {isDarkMode && (
+      {theme === 'dark' && (
         <>
           {/* Subtle dark gradient base */}
           <div className="fixed inset-0 bg-gradient-to-b from-[#050505] via-[#0a0a0a] to-black opacity-90" />
@@ -73,20 +70,20 @@ export default function LandingPage() {
 
       {/* Navigation */}
       <nav className={`sticky top-0 z-50 transition-colors duration-500 ${
-        isDarkMode ? 'bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5' : 'bg-white shadow-sm'
+        theme === 'dark' ? 'bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5' : 'bg-white shadow-sm'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                isDarkMode 
+                theme === 'dark' 
                   ? 'bg-gradient-to-br from-purple-500 to-pink-500' 
                   : 'bg-gradient-to-br from-blue-500 to-green-500'
               }`}>
                 <span className="text-white font-bold text-xl">EP</span>
               </div>
               <span className={`text-2xl font-bold ${
-                isDarkMode 
+                theme === 'dark' 
                   ? 'bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent'
                   : 'bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent'
               }`}>
@@ -96,25 +93,25 @@ export default function LandingPage() {
             <div className="flex items-center space-x-8">
               <div className="hidden md:flex space-x-8">
                 <a href="#features" className={`transition ${
-                  isDarkMode ? 'text-gray-400 hover:text-purple-400' : 'text-gray-700 hover:text-blue-600'
+                  theme === 'dark' ? 'text-gray-400 hover:text-purple-400' : 'text-gray-700 hover:text-blue-600'
                 }`}>Features</a>
                 <a href="#how-it-works" className={`transition ${
-                  isDarkMode ? 'text-gray-400 hover:text-purple-400' : 'text-gray-700 hover:text-blue-600'
+                  theme === 'dark' ? 'text-gray-400 hover:text-purple-400' : 'text-gray-700 hover:text-blue-600'
                 }`}>How It Works</a>
               </div>
               
               {/* Dark Mode Toggle */}
               <button
-                onClick={toggleDarkMode}
+                onClick={toggleTheme}
                 className={`relative w-16 h-8 rounded-full transition-colors duration-500 ${
-                  isDarkMode ? 'bg-purple-900/30 border border-purple-500/30' : 'bg-blue-200'
+                  theme === 'dark' ? 'bg-purple-900/30 border border-purple-500/30' : 'bg-blue-200'
                 }`}
                 aria-label="Toggle dark mode"
               >
                 <div className={`absolute top-1 left-1 w-6 h-6 rounded-full transition-all duration-500 transform ${
-                  isDarkMode ? 'translate-x-8 bg-gradient-to-br from-purple-500 to-pink-500' : 'translate-x-0 bg-yellow-400'
+                  theme === 'dark' ? 'translate-x-8 bg-gradient-to-br from-purple-500 to-pink-500' : 'translate-x-0 bg-yellow-400'
                 } flex items-center justify-center`}>
-                  {isDarkMode ? (
+                  {theme === 'dark' ? (
                     <span className="text-xs">🌙</span>
                   ) : (
                     <span className="text-xs">☀️</span>
@@ -123,7 +120,7 @@ export default function LandingPage() {
               </button>
               
               <button className={`px-6 py-2 rounded-lg font-semibold transition transform hover:scale-105 ${
-                isDarkMode
+                theme === 'dark'
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:shadow-[0_0_40px_rgba(168,85,247,0.4)]'
                   : 'bg-gradient-to-r from-blue-500 to-green-500 text-white hover:shadow-lg'
               }`}>
@@ -140,7 +137,7 @@ export default function LandingPage() {
           <div className="space-y-8">
             <div className="inline-block">
               <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                isDarkMode 
+                theme === 'dark' 
                   ? 'bg-gradient-to-r from-purple-600/10 to-pink-600/10 border border-purple-500/20 text-purple-400'
                   : 'bg-blue-100 text-blue-700'
               }`}>
@@ -148,7 +145,7 @@ export default function LandingPage() {
               </span>
             </div>
             <h1 className={`text-5xl md:text-6xl font-bold leading-tight ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}>
               Study <span className={isDarkMode 
                 ? 'bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent'
@@ -157,13 +154,13 @@ export default function LandingPage() {
               Not Harder
             </h1>
             <p className={`text-xl leading-relaxed ${
-              isDarkMode ? 'text-gray-400' : 'text-gray-600'
+              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
             }`}>
               ExamPulse uses advanced AI to analyze past papers, predict exam patterns, and create personalized study plans tailored to your needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button className={`px-8 py-4 rounded-lg font-semibold text-lg transition transform hover:scale-105 ${
-                isDarkMode
+                theme === 'dark'
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:shadow-[0_0_40px_rgba(168,85,247,0.4)]'
                   : 'bg-gradient-to-r from-blue-500 to-green-500 text-white hover:shadow-xl'
               }`}>
@@ -175,10 +172,10 @@ export default function LandingPage() {
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
                   <div className={`text-2xl font-bold ${
-                    isDarkMode ? 'text-purple-400' : 'text-blue-600'
+                    theme === 'dark' ? 'text-purple-400' : 'text-blue-600'
                   }`}>{stat.number}</div>
                   <div className={`text-sm ${
-                    isDarkMode ? 'text-gray-500' : 'text-gray-600'
+                    theme === 'dark' ? 'text-gray-500' : 'text-gray-600'
                   }`}>{stat.label}</div>
                 </div>
               ))}
@@ -186,16 +183,16 @@ export default function LandingPage() {
           </div>
           <div className="relative">
             <div className={`relative rounded-2xl p-8 shadow-2xl transform rotate-3 hover:rotate-0 transition duration-500 ${
-              isDarkMode
+              theme === 'dark'
                 ? 'bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30'
                 : 'bg-gradient-to-br from-blue-400 to-green-400'
             }`}>
               <div className={`rounded-xl p-6 space-y-4 ${
-                isDarkMode ? 'bg-white/5 backdrop-blur-xl border border-white/10' : 'bg-white'
+                theme === 'dark' ? 'bg-white/5 backdrop-blur-xl border border-white/10' : 'bg-white'
               }`}>
                 <div className="flex items-center space-x-3">
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                    isDarkMode ? 'bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30' : 'bg-green-100'
+                    theme === 'dark' ? 'bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30' : 'bg-green-100'
                   }`}>
                     <span className="text-2xl">🎯</span>
                   </div>
@@ -216,10 +213,10 @@ export default function LandingPage() {
                     <span className={`font-semibold ${isDarkMode ? 'text-purple-400' : 'text-green-600'}`}>92%</span>
                   </div>
                   <div className={`w-full rounded-full h-2 ${
-                    isDarkMode ? 'bg-white/10' : 'bg-gray-200'
+                    theme === 'dark' ? 'bg-white/10' : 'bg-gray-200'
                   }`}>
                     <div className={`h-2 rounded-full ${
-                      isDarkMode 
+                      theme === 'dark' 
                         ? 'bg-gradient-to-r from-purple-500 to-pink-500'
                         : 'bg-gradient-to-r from-blue-500 to-green-500'
                     }`} style={{ width: '92%' }}></div>
@@ -227,19 +224,19 @@ export default function LandingPage() {
                 </div>
                 <div className="grid grid-cols-3 gap-2 pt-2">
                   <div className={`p-3 rounded-lg text-center ${
-                    isDarkMode ? 'bg-purple-600/10 border border-purple-500/20' : 'bg-blue-50'
+                    theme === 'dark' ? 'bg-purple-600/10 border border-purple-500/20' : 'bg-blue-50'
                   }`}>
                     <div className={`text-lg font-bold ${isDarkMode ? 'text-purple-400' : 'text-blue-600'}`}>15</div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Topics</div>
                   </div>
                   <div className={`p-3 rounded-lg text-center ${
-                    isDarkMode ? 'bg-pink-600/10 border border-pink-500/20' : 'bg-green-50'
+                    theme === 'dark' ? 'bg-pink-600/10 border border-pink-500/20' : 'bg-green-50'
                   }`}>
                     <div className={`text-lg font-bold ${isDarkMode ? 'text-pink-400' : 'text-green-600'}`}>8</div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>High Priority</div>
                   </div>
                   <div className={`p-3 rounded-lg text-center ${
-                    isDarkMode ? 'bg-purple-600/10 border border-purple-500/20' : 'bg-purple-50'
+                    theme === 'dark' ? 'bg-purple-600/10 border border-purple-500/20' : 'bg-purple-50'
                   }`}>
                     <div className={`text-lg font-bold ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>5</div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Papers</div>
@@ -253,12 +250,12 @@ export default function LandingPage() {
 
       {/* Features Section */}
       <section id="features" className={`relative z-10 py-20 transition-colors duration-500 ${
-        isDarkMode ? 'bg-transparent' : 'bg-white'
+        theme === 'dark' ? 'bg-transparent' : 'bg-white'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className={`text-4xl font-bold mb-4 ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}>
               Powerful Features for <span className={isDarkMode 
                 ? 'bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent'
@@ -266,7 +263,7 @@ export default function LandingPage() {
               }>Exam Success</span>
             </h2>
             <p className={`text-xl max-w-2xl mx-auto ${
-              isDarkMode ? 'text-gray-400' : 'text-gray-600'
+              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
             }`}>
               Everything you need to ace your exams, powered by cutting-edge AI technology
             </p>
@@ -278,7 +275,7 @@ export default function LandingPage() {
                 onMouseEnter={() => setIsHovered(index)}
                 onMouseLeave={() => setIsHovered(null)}
                 className={`p-6 rounded-xl transition duration-300 hover:shadow-xl transform hover:-translate-y-2 ${
-                  isDarkMode
+                  theme === 'dark'
                     ? `bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border ${
                         isHovered === index ? 'border-purple-500/30 shadow-[0_0_50px_rgba(168,85,247,0.15)]' : 'border-white/10'
                       }`
@@ -289,12 +286,12 @@ export default function LandingPage() {
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <h3 className={`text-xl font-bold mb-2 ${
-                  isDarkMode 
+                  theme === 'dark' 
                     ? `${isHovered === index ? 'text-purple-300' : 'text-white'}`
                     : 'text-gray-900'
                 }`}>{feature.title}</h3>
                 <p className={`${
-                  isDarkMode 
+                  theme === 'dark' 
                     ? `${isHovered === index ? 'text-gray-300' : 'text-gray-400'}`
                     : 'text-gray-600'
                 }`}>
@@ -308,19 +305,19 @@ export default function LandingPage() {
 
       {/* How It Works */}
       <section id="how-it-works" className={`relative z-10 py-20 transition-colors duration-500 ${
-        isDarkMode 
+        theme === 'dark' 
           ? 'bg-transparent' 
           : 'bg-gradient-to-br from-blue-50 to-green-50'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className={`text-4xl font-bold mb-4 ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}>
               How It Works
             </h2>
             <p className={`text-xl ${
-              isDarkMode ? 'text-gray-400' : 'text-gray-600'
+              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
             }`}>Simple, fast, and effective</p>
           </div>
           <div className="grid md:grid-cols-4 gap-8">
@@ -332,23 +329,23 @@ export default function LandingPage() {
             ].map((item, index) => (
               <div key={index} className="text-center">
                 <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg ${
-                  isDarkMode
+                  theme === 'dark'
                     ? 'bg-gradient-to-br from-purple-600 to-pink-600 text-white'
                     : 'bg-gradient-to-br from-blue-500 to-green-500 text-white'
                 }`}>
                   {item.icon}
                 </div>
                 <div className={`rounded-lg p-6 shadow-md ${
-                  isDarkMode ? 'bg-white/5 backdrop-blur-xl border border-white/10' : 'bg-white'
+                  theme === 'dark' ? 'bg-white/5 backdrop-blur-xl border border-white/10' : 'bg-white'
                 }`}>
                   <div className={`text-sm font-semibold mb-2 ${
-                    isDarkMode ? 'text-purple-400' : 'text-blue-600'
+                    theme === 'dark' ? 'text-purple-400' : 'text-blue-600'
                   }`}>STEP {item.step}</div>
                   <h3 className={`text-lg font-bold mb-2 ${
-                    isDarkMode ? 'text-white' : 'text-gray-900'
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
                   }`}>{item.title}</h3>
                   <p className={`text-sm ${
-                    isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                    theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                   }`}>{item.desc}</p>
                 </div>
               </div>
@@ -359,7 +356,7 @@ export default function LandingPage() {
 
       {/* CTA Section */}
       <section className={`relative z-10 py-20 ${
-        isDarkMode 
+        theme === 'dark' 
           ? 'bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-y border-purple-500/20'
           : 'bg-gradient-to-r from-blue-600 to-green-600'
       }`}>
@@ -368,12 +365,12 @@ export default function LandingPage() {
             Ready to Transform Your Exam Preparation?
           </h2>
           <p className={`text-xl mb-8 ${
-            isDarkMode ? 'text-gray-300' : 'text-blue-100'
+            theme === 'dark' ? 'text-gray-300' : 'text-blue-100'
           }`}>
             Join thousands of students who are studying smarter with ExamPulse
           </p>
           <button className={`px-8 py-4 rounded-lg font-semibold text-lg transition transform hover:scale-105 ${
-            isDarkMode
+            theme === 'dark'
               ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:shadow-[0_0_40px_rgba(168,85,247,0.5)]'
               : 'bg-white text-blue-600 hover:shadow-2xl'
           }`}>
@@ -384,13 +381,13 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className={`relative z-10 py-12 transition-colors duration-500 ${
-        isDarkMode ? 'border-t border-white/5 bg-transparent' : 'bg-gray-900'
+        theme === 'dark' ? 'border-t border-white/5 bg-transparent' : 'bg-gray-900'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                isDarkMode 
+                theme === 'dark' 
                   ? 'bg-gradient-to-br from-purple-500 to-pink-500' 
                   : 'bg-gradient-to-br from-blue-500 to-green-500'
               }`}>
@@ -399,12 +396,12 @@ export default function LandingPage() {
               <span className="text-xl font-bold text-white">ExamPulse</span>
             </div>
             <p className={`text-sm mb-4 ${
-              isDarkMode ? 'text-gray-500' : 'text-gray-400'
+              theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
             }`}>
               © 2025 ExamPulse. Built with ❤️ for students.
             </p>
             <p className={`text-xs ${
-              isDarkMode ? 'text-gray-600' : 'text-gray-500'
+              theme === 'dark' ? 'text-gray-600' : 'text-gray-500'
             }`}>
               Team: Haroon, Azmeer, Saria, Soban, Basima, Dr. Mubashar
             </p>
