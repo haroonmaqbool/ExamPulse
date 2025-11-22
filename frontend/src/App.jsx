@@ -14,15 +14,17 @@ import Background from './components/Background'
 
 /**
  * AppLayout provides the main structure for pages that need the Navbar.
- * It adds top padding to the main content area to prevent it from being
- * obscured by the fixed Navbar.
+ * 
+ * Layout Logic:
+ * 1. md:pl-64 -> Pushes content to the right on desktop to make room for the 64px (w-64) fixed sidebar.
+ * 2. pt-16 -> Adds top padding on mobile for the fixed top header.
+ * 3. md:pt-0 -> Removes top padding on desktop since the sidebar is full height.
  */
 const AppLayout = () => {
   return (
     <>
       <Navbar />
-      {/* pt-20 corresponds to the navbar's h-20 height */}
-      <main className="pt-20">
+      <main className="md:pl-64 pt-16 md:pt-0 min-h-screen transition-all duration-300">
         <Outlet />
       </main>
     </>
@@ -60,7 +62,7 @@ function AppContent() {
         </Route>
       </Routes>
 
-      {/* Floating Chatbot Button - only show on home and onwards */}
+      {/* Floating Chatbot Button - Adjusted to sit nicely with sidebar */}
       {showChatbot && (
         <button
           onClick={toggleChat}
@@ -83,7 +85,7 @@ function AppContent() {
         </button>
       )}
 
-      {/* Chatbot Component - only show on home and onwards */}
+      {/* Chatbot Component */}
       {showChatbot && (
         <Chatbot isChatOpen={isChatOpen} toggleChat={toggleChat} />
       )}
