@@ -18,9 +18,11 @@ async def chat_with_bot(chat_message: ChatMessage):
     Handles a chat message from the user and returns a response from the OpenRouter API.
     """
     try:
+        print(f"Chatbot request received: {chat_message.message[:50]}...")
         api_key = os.getenv("OPENROUTER_API_KEY")
 
         if not api_key:
+            print("ERROR: OPENROUTER_API_KEY not found in environment")
             return {"response": "I'm sorry, but the chatbot is not properly configured. Please contact support."}
 
         # System prompt to restrict responses to education topics only
@@ -42,6 +44,7 @@ IMPORTANT RULES:
         if chat_message.userName:
             system_prompt += f"\n- Address the user as {chat_message.userName} in your responses"
 
+        print("Sending request to OpenRouter API...")
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 "https://openrouter.ai/api/v1/chat/completions",
@@ -59,6 +62,7 @@ IMPORTANT RULES:
                 timeout=60.0
             )
 
+            print(f"OpenRouter API response status: {response.status_code}")
             result = response.json()
 
             # Check for errors in the response
@@ -83,11 +87,17 @@ IMPORTANT RULES:
                 print(f"Unexpected response structure: {result}")
                 return {"response": "I'm sorry, I couldn't generate a response. Please try again."}
 
-    except httpx.TimeoutException:
+    except httpx.TimeoutException as e:
+        print(f"Timeout error: {e}")
         return {"response": "The request took too long. Please try again with a shorter question."}
-    except httpx.RequestError:
+    except httpx.RequestError as e:
+        print(f"Request error: {e}")
         return {"response": "I'm having trouble connecting to my services. Please check your internet connection and try again."}
-    except KeyError:
+    except KeyError as e:
+        print(f"KeyError: {e}")
         return {"response": "I received an unexpected response. Please try asking your question again."}
-    except Exception:
+    except Exception as e:
+        print(f"Unexpected error: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
         return {"response": "I'm sorry, something went wrong. Please try again."}

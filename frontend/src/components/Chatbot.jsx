@@ -42,6 +42,10 @@ const Chatbot = ({ isChatOpen, toggleChat }) => {
     }
 
     try {
+      // Add timeout to prevent hanging
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 60000) // 60 second timeout
+
       const response = await fetch('http://localhost:8000/chatbot/', {
         method: 'POST',
         headers: {
@@ -51,13 +55,22 @@ const Chatbot = ({ isChatOpen, toggleChat }) => {
           message: currentInput,
           userName: userName || currentInput
         }),
+        signal: controller.signal
       })
 
+      clearTimeout(timeoutId)
+
       if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Server error:', response.status, errorText)
         throw new Error(`Server error: ${response.status}`)
       }
 
       const data = await response.json()
+
+      if (!data || !data.response) {
+        throw new Error('Invalid response from server')
+      }
 
       const botMessage = {
         role: 'bot',
@@ -66,10 +79,22 @@ const Chatbot = ({ isChatOpen, toggleChat }) => {
       setMessages((prev) => [...prev, botMessage])
     } catch (error) {
       console.error('Error fetching chatbot response:', error)
-      const errorMessage = {
+      
+      let errorMessage = {
         role: 'bot',
-        text: 'Sorry, I am having trouble connecting. Please make sure the backend server is running and try again.'
+        text: ''
       }
+
+      if (error.name === 'AbortError') {
+        errorMessage.text = 'The request took too long. The AI service might be slow. Please try again with a shorter question.'
+      } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+        errorMessage.text = 'Cannot connect to the server. Please make sure the backend server is running on http://localhost:8000'
+      } else if (error.message.includes('Server error')) {
+        errorMessage.text = 'Server error occurred. Please check the backend logs and try again.'
+      } else {
+        errorMessage.text = 'Sorry, I am having trouble connecting. Please make sure the backend server is running and try again.'
+      }
+
       setMessages((prev) => [...prev, errorMessage])
     } finally {
       setIsLoading(false)
