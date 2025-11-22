@@ -3,7 +3,7 @@
  * Page for uploading past exam papers
  */
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import FileUpload from '../components/FileUpload'
 import { useTheme } from '../components/ThemeContext'
@@ -30,14 +30,33 @@ function Upload() {
     setFileName(file.name)
 
     try {
+      // Validate file size before upload (10MB limit)
+      const maxSize = 10 * 1024 * 1024 // 10MB
+      if (file.size > maxSize) {
+        throw new Error(`File is too large. Maximum size is 10MB. Your file is ${(file.size / (1024 * 1024)).toFixed(2)}MB.`)
+      }
+
+      if (file.size === 0) {
+        throw new Error('File is empty. Please select a valid file.')
+      }
+
       const formData = new FormData()
       formData.append('file', file)
 
+      console.log('Uploading file:', file.name, 'Size:', file.size, 'bytes')
+
+      // Use shorter timeout for uploads (30 seconds)
       const response = await api.post('/upload/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        timeout: 30000, // 30 seconds for file upload
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            console.log(`Upload progress: ${percentCompleted}%`)
+          }
+        }
       })
+
+      console.log('Upload response:', response.data)
 
       const { file_id, filename } = response.data
       setFileId(file_id)
@@ -47,9 +66,25 @@ function Upload() {
         message: `File "${filename}" uploaded successfully!`
       })
     } catch (error) {
+      console.error('Upload error:', error)
+      
+      let errorMessage = 'Upload failed. Please try again.'
+      
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        errorMessage = 'Upload timed out. Please check your connection and try again.'
+      } else if (error.response) {
+        // Server responded with error
+        errorMessage = error.response.data?.detail || error.message || errorMessage
+      } else if (error.request) {
+        // Request made but no response
+        errorMessage = 'Cannot connect to server. Please make sure the backend is running on http://localhost:8000'
+      } else {
+        errorMessage = error.message || errorMessage
+      }
+      
       setUploadStatus({ 
         success: false, 
-        message: error.message || 'Upload failed. Please try again.' 
+        message: errorMessage
       })
     } finally {
       setUploading(false)
@@ -63,9 +98,8 @@ function Upload() {
   }
 
   const handleAnalyze = () => {
-    if (uploadedFiles.length > 0) {
-      const fileIds = uploadedFiles.map(f => f.file_id)
-      navigate(`/analysis?file_ids=${encodeURIComponent(JSON.stringify(fileIds))}`)
+    if (fileId) {
+      navigate(`/analysis?file_ids=${encodeURIComponent(JSON.stringify([fileId]))}`)
     }
   }
 
@@ -100,7 +134,7 @@ function Upload() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
           >
-            <FileUpload onFileSelect={handleFileSelect} />
+            <FileUpload onFileSelect={handleFileSelect} inputRef={fileInputRef} />
           </motion.div>
           
           {/* Uploading Status */}
