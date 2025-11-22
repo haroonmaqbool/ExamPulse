@@ -28,7 +28,17 @@ function Dashboard() {
     totalPapersUploaded: 0,
     topicsAnalyzed: 0,
     studyStreak: 0,
-    lastActivity: 'No activity yet'
+    lastActivity: 'No activity yet',
+    totalMarks: 0,
+    averageMarks: 0,
+    questionTypes: {},
+    topTopics: [],
+    totalStudyLogs: 0,
+    totalStudyHours: 0,
+    studyLogsByType: {},
+    mostStudiedTopics: [],
+    recentQuestions: 0,
+    recentStudyLogs: 0
   })
 
   useEffect(() => {
@@ -41,7 +51,31 @@ function Dashboard() {
       setLoading(true)
       setError(null)
       const response = await api.get('/dashboard/')
-      setDashboardData(response.data)
+      console.log('Dashboard API response:', response.data)
+      
+      // Ensure all fields are properly mapped from backend response
+      if (response.data) {
+        setDashboardData({
+          accuracyScore: response.data.accuracyScore || 0,
+          predictedQuestions: response.data.predictedQuestions || 0,
+          daysUntilExam: response.data.daysUntilExam || 30,
+          studyProgress: response.data.studyProgress || 0,
+          totalPapersUploaded: response.data.totalPapersUploaded || 0,
+          topicsAnalyzed: response.data.topicsAnalyzed || 0,
+          studyStreak: response.data.studyStreak || 0,
+          lastActivity: response.data.lastActivity || 'No activity yet',
+          totalMarks: response.data.totalMarks || 0,
+          averageMarks: response.data.averageMarks || 0,
+          questionTypes: response.data.questionTypes || {},
+          topTopics: response.data.topTopics || [],
+          totalStudyLogs: response.data.totalStudyLogs || 0,
+          totalStudyHours: response.data.totalStudyHours || 0,
+          studyLogsByType: response.data.studyLogsByType || {},
+          mostStudiedTopics: response.data.mostStudiedTopics || [],
+          recentQuestions: response.data.recentQuestions || 0,
+          recentStudyLogs: response.data.recentStudyLogs || 0
+        })
+      }
     } catch (err) {
       console.error('Error fetching dashboard data:', err)
       setError('Failed to load dashboard data')
@@ -104,34 +138,34 @@ function Dashboard() {
               
               {/* Quick Stats Bar */}
               <div className="flex flex-wrap gap-4">
-                <div className={`px-4 py-2 rounded-xl backdrop-blur-sm ${
+                <div className={`px-6 py-3 rounded-xl backdrop-blur-sm min-w-[100px] ${
                   isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white/80 border border-blue-200 shadow-sm'
                 }`}>
-                  <div className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+                  <div className={`text-sm mb-1.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
                     Papers
                   </div>
-                  <div className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {dashboardData.totalPapersUploaded}
                   </div>
                 </div>
-                <div className={`px-4 py-2 rounded-xl backdrop-blur-sm ${
+                <div className={`px-6 py-3 rounded-xl backdrop-blur-sm min-w-[100px] ${
                   isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white/80 border border-blue-200 shadow-sm'
                 }`}>
-                  <div className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+                  <div className={`text-sm mb-1.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
                     Topics
                   </div>
-                  <div className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {dashboardData.topicsAnalyzed}
                   </div>
                 </div>
-                <div className={`px-4 py-2 rounded-xl backdrop-blur-sm ${
+                <div className={`px-6 py-3 rounded-xl backdrop-blur-sm min-w-[100px] ${
                   isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white/80 border border-blue-200 shadow-sm'
                 }`}>
-                  <div className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+                  <div className={`text-sm mb-1.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
                     Streak
                   </div>
-                  <div className={`text-lg font-bold flex items-center gap-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {dashboardData.studyStreak} <span className="text-sm">🔥</span>
+                  <div className={`text-2xl font-bold flex items-center gap-1.5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {dashboardData.studyStreak} <span className="text-lg">🔥</span>
                   </div>
                 </div>
               </div>
@@ -348,50 +382,52 @@ function Dashboard() {
             {/* Right Column - Stats */}
             <div className="lg:col-span-2 space-y-6">
               
-              {/* Accuracy Score */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className={`rounded-2xl p-6 ${
-                isDarkMode
-                  ? 'bg-white/5 border border-white/10'
-                  : 'bg-white/80 border border-blue-200 backdrop-blur-sm'
-              }`}>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className={`text-sm font-medium ${
+              {/* Top Topics */}
+              {dashboardData.topTopics && dashboardData.topTopics.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className={`rounded-2xl p-6 ${
+                    isDarkMode
+                      ? 'bg-white/5 border border-white/10'
+                      : 'bg-white/80 border border-blue-200 backdrop-blur-sm'
+                  }`}>
+                  <h3 className={`text-sm font-medium mb-4 ${
                     isDarkMode ? 'text-gray-400' : 'text-gray-600'
                   }`}>
-                    Accuracy
+                    Top Topics
                   </h3>
-                  <Zap className={`w-4 h-4 ${
-                    isDarkMode ? 'text-yellow-400' : 'text-yellow-500'
-                  }`} />
-                </div>
-                <div className="mb-4">
-                  <div className="text-4xl font-black mb-1">
-                    <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>
-                      {dashboardData.accuracyScore}
-                    </span>
-                    <span className={`text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                      %
-                    </span>
+                  <div className="space-y-3">
+                    {dashboardData.topTopics.slice(0, 5).map((item, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className={`text-sm font-medium ${
+                              isDarkMode ? 'text-white' : 'text-gray-900'
+                            }`}>
+                              {item.topic}
+                            </span>
+                            <span className={`text-xs ${
+                              isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
+                              {item.count} ({item.percentage}%)
+                            </span>
+                          </div>
+                          <div className={`h-1.5 rounded-full overflow-hidden ${
+                            isDarkMode ? 'bg-white/10' : 'bg-gray-200'
+                          }`}>
+                            <div
+                              className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                              style={{ width: `${item.percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <p className={`text-xs ${
-                    isDarkMode ? 'text-green-400' : 'text-green-600'
-                  }`}>
-                    ↑ 5% from last week
-                  </p>
-                </div>
-                <div className={`h-2 rounded-full overflow-hidden ${
-                  isDarkMode ? 'bg-white/10' : 'bg-gray-200'
-                }`}>
-                  <div 
-                    className="h-full bg-gradient-to-r from-green-500 to-emerald-500"
-                    style={{ width: `${dashboardData.accuracyScore}%` }}
-                  />
-                </div>
-              </motion.div>
+                </motion.div>
+              )}
 
               {/* Predicted Questions */}
               <motion.div
@@ -480,14 +516,141 @@ function Dashboard() {
                   </div>
                 </div>
                 
+                <p className={`text-xs text-center mb-2 ${
+                  isDarkMode ? 'text-gray-500' : 'text-gray-600'
+                }`}>
+                  {dashboardData.totalStudyHours}h studied
+                </p>
                 <p className={`text-xs text-center ${
                   isDarkMode ? 'text-gray-500' : 'text-gray-600'
                 }`}>
-                  Keep going! You're doing great.
+                  {dashboardData.totalStudyLogs} log{dashboardData.totalStudyLogs !== 1 ? 's' : ''} created
                 </p>
               </motion.div>
+
+
             </div>
           </div>
+
+          {/* Additional Stats Row */}
+          {(dashboardData.recentQuestions > 0 || dashboardData.recentStudyLogs > 0 || (dashboardData.mostStudiedTopics && dashboardData.mostStudiedTopics.length > 0)) && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              {/* Recent Activity */}
+              {(dashboardData.recentQuestions > 0 || dashboardData.recentStudyLogs > 0) && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                  className={`rounded-2xl p-6 ${
+                    isDarkMode
+                      ? 'bg-white/5 border border-white/10'
+                      : 'bg-white/80 border border-blue-200 backdrop-blur-sm'
+                  }`}>
+                  <h3 className={`text-sm font-medium mb-4 ${
+                    isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    Recent Activity (7 days)
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm ${
+                        isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        Questions Added
+                      </span>
+                      <span className={`text-lg font-bold ${
+                        isDarkMode ? 'text-white' : 'text-gray-900'
+                      }`}>
+                        {dashboardData.recentQuestions}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm ${
+                        isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        Study Logs
+                      </span>
+                      <span className={`text-lg font-bold ${
+                        isDarkMode ? 'text-white' : 'text-gray-900'
+                      }`}>
+                        {dashboardData.recentStudyLogs}
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Most Studied Topics */}
+              {dashboardData.mostStudiedTopics && dashboardData.mostStudiedTopics.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
+                  className={`rounded-2xl p-6 ${
+                    isDarkMode
+                      ? 'bg-white/5 border border-white/10'
+                      : 'bg-white/80 border border-purple-200 backdrop-blur-sm'
+                  }`}>
+                  <h3 className={`text-sm font-medium mb-4 ${
+                    isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    Most Studied Topics
+                  </h3>
+                  <div className="space-y-2">
+                    {dashboardData.mostStudiedTopics.slice(0, 5).map((item, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <span className={`text-sm ${
+                          isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
+                          {item.topic}
+                        </span>
+                        <span className={`text-sm font-semibold ${
+                          isDarkMode ? 'text-white' : 'text-gray-900'
+                        }`}>
+                          {item.count} log{item.count !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Study Logs Breakdown */}
+              {dashboardData.studyLogsByType && Object.keys(dashboardData.studyLogsByType).length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  className={`rounded-2xl p-6 ${
+                    isDarkMode
+                      ? 'bg-white/5 border border-white/10'
+                      : 'bg-white/80 border border-green-200 backdrop-blur-sm'
+                  }`}>
+                  <h3 className={`text-sm font-medium mb-4 ${
+                    isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    Study Logs by Type
+                  </h3>
+                  <div className="space-y-2">
+                    {Object.entries(dashboardData.studyLogsByType).map(([type, count]) => (
+                      <div key={type} className="flex items-center justify-between">
+                        <span className={`text-sm capitalize ${
+                          isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
+                          {type}
+                        </span>
+                        <span className={`text-sm font-semibold ${
+                          isDarkMode ? 'text-white' : 'text-gray-900'
+                        }`}>
+                          {count}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          )}
 
           {/* Bottom Tip Card */}
           <motion.div
