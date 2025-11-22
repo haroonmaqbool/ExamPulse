@@ -8,7 +8,9 @@ import api from '../utils/api'
 import { useTheme } from '../components/ThemeContext'
 import Navbar from '../components/Navbar'
 import Background from '../components/Background'
+import ShaderBackground from '../components/ShaderBackground'
 import GeneratingLoader from '../components/GeneratingLoader'
+import { motion } from 'framer-motion'
 
 function ExpectedPaper() {
   const [expectedPaper, setExpectedPaper] = useState(null)
@@ -33,61 +35,69 @@ function ExpectedPaper() {
 
   return (
     <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${
-      theme === 'dark' ? 'bg-[#0a0a0a] text-white' : 'bg-gradient-to-br from-blue-50 via-white to-green-50'
+      theme === 'dark' ? '' : 'bg-gradient-to-br from-blue-50 via-white to-green-50'
     }`}>
-      <Background />
+      {theme === 'dark' && <ShaderBackground />}
+      {theme !== 'dark' && <Background />}
       <Navbar />
       
       <main className="pt-20 relative z-10">
         <div className="max-w-6xl mx-auto px-6 py-12">
           {/* Header with title */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <h1 className={`text-4xl font-bold ${
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className={`text-5xl font-black bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
               theme === 'dark'
-                ? 'bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent'
-                : 'text-gray-900'
+                ? 'from-purple-400 to-pink-400'
+                : 'from-blue-600 to-green-600'
             }`}>
               Expected Paper
-            </h1>
+            </motion.h1>
 
             {/* Generate button */}
-            <button
-                onClick={generateExpectedPaper}
-                disabled={loading}
-                className={`relative px-6 py-3 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 ${
-                  theme === 'dark'
-                    ? 'text-white'
-                    : 'text-gray-900' // button text color in light mode
-                }`}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={generateExpectedPaper}
+              disabled={loading}
+              className={`relative px-8 py-3 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${
+                theme === 'dark'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/30'
+                  : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 shadow-blue-500/30'
+              }`}
             >
-                <span className={`absolute inset-0 ${
-                  theme === 'dark'
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600'
-                    : 'bg-gradient-to-r from-blue-500 to-green-500' // light mode gradient
-                }`} />
-                <span className="relative">
-                  {loading ? 'Generating...' : 'Generate Expected Paper'}
-                </span>
-            </button>
+              {loading ? 'Generating...' : 'Generate Expected Paper'}
+            </motion.button>
           </div>
 
           {/* Expected Paper Display */}
           {loading ? (
-            <div className={`rounded-2xl border transition-all duration-300 ${
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className={`rounded-2xl border transition-all duration-300 ${
               theme === 'dark'
-                ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10'
-                : 'bg-white border-2 border-blue-200'
+                ? 'bg-white/5 border-white/10 backdrop-blur-xl'
+                : 'bg-white/80 border-blue-200 backdrop-blur-sm'
             }`}>
               <GeneratingLoader text="Generating" />
-            </div>
+            </motion.div>
           ) : expectedPaper ? (
-            <div className={`rounded-2xl border p-8 transition-all duration-300 ${
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className={`rounded-2xl border p-8 transition-all duration-300 ${
               theme === 'dark'
-                ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10'
-                : 'bg-white border-2 border-blue-200'
+                ? 'bg-white/5 border-white/10 backdrop-blur-xl'
+                : 'bg-white/80 border-blue-200 backdrop-blur-sm'
             }`}>
               <div className="mb-4">
-                <h2 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${
+                <h2 className={`text-2xl font-black mb-2 transition-colors duration-300 ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}>
                   Expected Questions ({expectedPaper.total_questions || 0})
@@ -104,12 +114,16 @@ function ExpectedPaper() {
               {expectedPaper.questions && expectedPaper.questions.length > 0 ? (
                 <div className="space-y-4">
                   {expectedPaper.questions.map((q, index) => (
-                    <div
+                    <motion.div
                       key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      whileHover={{ y: -2 }}
                       className={`p-4 rounded-lg border transition-all duration-300 ${
                         theme === 'dark'
-                          ? 'bg-white/5 border-white/10'
-                          : 'bg-blue-50 border-blue-200'
+                          ? 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-blue-500/50'
+                          : 'bg-white/80 border-blue-200 hover:bg-white hover:border-blue-300 backdrop-blur-sm'
                       }`}
                     >
                       <div className="flex items-start justify-between mb-2">
@@ -129,7 +143,7 @@ function ExpectedPaper() {
                       }`}>
                         {q.question_text}
                       </p>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               ) : (
@@ -139,15 +153,19 @@ function ExpectedPaper() {
                   No questions generated.
                 </p>
               )}
-            </div>
+            </motion.div>
           ) : (
-            <div className={`rounded-2xl border p-8 text-center transition-all duration-300 ${
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className={`rounded-2xl border p-8 text-center transition-all duration-300 ${
               theme === 'dark'
-                ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10 text-gray-400'
-                : 'bg-white border-2 border-blue-200 text-gray-600'
+                ? 'bg-white/5 border-white/10 backdrop-blur-xl text-gray-400'
+                : 'bg-white/80 border-blue-200 backdrop-blur-sm text-gray-600'
             }`}>
               Click "Generate Expected Paper" to create an expected exam paper
-            </div>
+            </motion.div>
           )}
         </div>
       </main>
