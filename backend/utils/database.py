@@ -138,6 +138,53 @@ class Database:
         except Exception as e:
             print(f"Error fetching latest plan: {e}")
             return None
+    
+    def delete_study_log(self, log_id: str) -> bool:
+        """
+        Delete a study log by ID.
+        
+        Args:
+            log_id: The ID of the study log to delete
+        
+        Returns:
+            True if deletion was successful, False otherwise
+        """
+        try:
+            response = self.client.table("study_logs").delete().eq("id", log_id).execute()
+            return True
+        except Exception as e:
+            print(f"Error deleting study log: {e}")
+            return False
+    
+    def delete_all_study_logs(self) -> bool:
+        """
+        Delete all study logs from the database.
+        
+        Returns:
+            True if deletion was successful, False otherwise
+        """
+        try:
+            # Get all log IDs first
+            all_logs = self.get_all_study_logs()
+            if not all_logs or len(all_logs) == 0:
+                return True  # Nothing to delete
+            
+            # Delete all logs by their IDs in batch
+            log_ids = [log.get('id') for log in all_logs if log.get('id')]
+            
+            if log_ids:
+                # Delete each log individually (Supabase doesn't support bulk delete easily)
+                for log_id in log_ids:
+                    try:
+                        self.client.table("study_logs").delete().eq("id", log_id).execute()
+                    except Exception as e:
+                        print(f"Error deleting log {log_id}: {e}")
+                        # Continue with other deletions
+            
+            return True
+        except Exception as e:
+            print(f"Error deleting all study logs: {e}")
+            return False
 
 
 # Singleton instance
