@@ -6,6 +6,7 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useTheme } from '../components/ThemeContext'
+import Background from '../components/Background'
 
 function Home() {
   const currentYear = new Date().getFullYear()
@@ -23,20 +24,7 @@ function Home() {
         ? 'bg-[#0a0a0a]' 
         : 'bg-gradient-to-br from-blue-50 via-white to-green-50'
     }`}>
-      {/* Animated gradient background */}
-      <div className={`fixed inset-0 transition-colors duration-500 ${
-        isDarkMode
-          ? 'bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20'
-          : 'hidden'
-      }`} />
-      <div className="fixed inset-0">
-        <div className={`absolute top-0 left-1/4 w-96 h-96 bg-purple-600/30 rounded-full blur-[120px] animate-pulse ${isDarkMode ? 'block' : 'hidden'}`} />
-        <div className={`absolute bottom-0 right-1/4 w-96 h-96 bg-pink-600/30 rounded-full blur-[120px] animate-pulse delay-700 ${isDarkMode ? 'block' : 'hidden'}`} />
-        <div className={`absolute top-1/2 left-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] animate-pulse delay-1000 ${isDarkMode ? 'block' : 'hidden'}`} />
-      </div>
-
-      {/* Grid pattern overlay */}
-      <div className={`fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)] ${isDarkMode ? 'block' : 'hidden'}`} />
+      <Background />
 
       <main className="relative z-10">
         {/* Hero section */}
