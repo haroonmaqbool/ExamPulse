@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Chatbot from './components/Chatbot'
 import Home from './pages/Home'
@@ -10,6 +10,7 @@ import StudyLogs from './pages/StudyLogs'
 import SmartPlan from './pages/SmartPlan'
 import LandingPage from './pages/LandingPage'
 import { ThemeProvider, useTheme } from './components/ThemeContext'
+import Background from './components/Background'
 
 /**
  * AppLayout provides the main structure for pages that need the Navbar.
@@ -42,18 +43,21 @@ function AppContent() {
   const showChatbot = location.pathname !== '/'
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}`}>
+      <Background />
       <Routes>
         {/* Landing page - no navbar, no chatbot */}
         <Route path="/" element={<LandingPage />} />
 
         {/* Main app routes - with navbar and chatbot */}
-        <Route path="/home" element={<><Navbar /><Home /></>} />
-        <Route path="/upload" element={<><Navbar /><Upload /></>} />
-        <Route path="/analysis" element={<><Navbar /><Analysis /></>} />
-        <Route path="/expected-paper" element={<><Navbar /><ExpectedPaper /></>} />
-        <Route path="/study-logs" element={<><Navbar /><StudyLogs /></>} />
-        <Route path="/smart-plan" element={<><Navbar /><SmartPlan /></>} />
+        <Route element={<AppLayout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/expected-paper" element={<ExpectedPaper />} />
+          <Route path="/study-logs" element={<StudyLogs />} />
+          <Route path="/smart-plan" element={<SmartPlan />} />
+        </Route>
       </Routes>
 
       {/* Floating Chatbot Button - only show on home and onwards */}

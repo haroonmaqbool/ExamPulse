@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from '../components/ThemeContext';
 import { Link } from 'react-router-dom';
+import Background from '../components/Background';
 
 export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
@@ -50,24 +51,9 @@ export default function LandingPage() {
     <div className={`min-h-screen transition-colors duration-500 ${
       theme === 'dark' 
         ? 'bg-[#0a0a0a]' 
-        : 'bg-gradient-to-br from-blue-50 via-white to-green-50'
+        : 'bg-white'
     }`}>
-      {/* Animated gradient background for dark mode */}
-      {theme === 'dark' && (
-        <>
-          {/* Subtle dark gradient base */}
-          <div className="fixed inset-0 bg-gradient-to-b from-[#050505] via-[#0a0a0a] to-black opacity-90" />
-
-          {/* Very soft orbs */}
-          <div className="fixed inset-0 pointer-events-none">
-            <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-purple-700/10 rounded-full blur-[140px]" />
-            <div className="absolute bottom-1/4 right-1/3 w-72 h-72 bg-pink-700/10 rounded-full blur-[140px]" />
-          </div>
-
-          {/* Very subtle grid (dark mode friendly) */}
-          <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:120px_120px] opacity-10" />
-        </>
-      )}
+      <Background />
 
       {/* Navigation */}
       <nav className={`sticky top-0 z-50 transition-colors duration-500 ${
