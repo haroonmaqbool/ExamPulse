@@ -6,34 +6,51 @@
 import { useState } from 'react'
 import FileUpload from '../components/FileUpload'
 import { useTheme } from '../components/ThemeContext'
-import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import api from '../utils/api'
 
 function Upload() {
   const [uploading, setUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState(null)
+  const [fileId, setFileId] = useState(null)
   const { theme } = useTheme()
   const isDarkMode = theme === 'dark'
+  const navigate = useNavigate()
 
   const handleFileSelect = async (file) => {
     setUploading(true)
     setUploadStatus(null)
+    setFileId(null)
 
     try {
       const formData = new FormData()
       formData.append('file', file)
 
-      // TODO: Implement actual API call
-      const response = await axios.post('/api/upload/', formData, {
+      const response = await api.post('/upload/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       })
 
-      setUploadStatus({ success: true, message: 'File uploaded successfully' })
+      const { file_id, filename } = response.data
+      setFileId(file_id)
+      setUploadStatus({ 
+        success: true, 
+        message: `File "${filename}" uploaded successfully! File ID: ${file_id}` 
+      })
     } catch (error) {
-      setUploadStatus({ success: false, message: 'Upload failed' })
+      setUploadStatus({ 
+        success: false, 
+        message: error.message || 'Upload failed. Please try again.' 
+      })
     } finally {
       setUploading(false)
+    }
+  }
+
+  const handleAnalyze = () => {
+    if (fileId) {
+      navigate(`/analysis?file_id=${fileId}`)
     }
   }
 
@@ -72,6 +89,18 @@ function Upload() {
             }`}
           >
             {uploadStatus.message}
+            {uploadStatus.success && fileId && (
+              <button
+                onClick={handleAnalyze}
+                className={`mt-3 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                  isDarkMode
+                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                }`}
+              >
+                Analyze This File
+              </button>
+            )}
           </div>
         )}
       </div>

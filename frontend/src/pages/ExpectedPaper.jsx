@@ -4,8 +4,8 @@
  */
 
 import { useState } from 'react'
-import axios from 'axios'
-import { useTheme } from '../components/ThemeContext' // import your theme context
+import api from '../utils/api'
+import { useTheme } from '../components/ThemeContext'
 
 function ExpectedPaper() {
   const [expectedPaper, setExpectedPaper] = useState(null)
@@ -14,14 +14,15 @@ function ExpectedPaper() {
 
   const generateExpectedPaper = async () => {
     setLoading(true)
+    setExpectedPaper(null)
     try {
-      // TODO: Implement actual API call
-      const response = await axios.post('/api/expected-paper/', {
-        analysis_id: 'placeholder'
+      const response = await api.post('/expected-paper/', {
+        analysis_id: 'current' // Uses all questions in database
       })
       setExpectedPaper(response.data)
     } catch (error) {
       console.error('Failed to generate expected paper:', error)
+      alert(error.message || 'Failed to generate expected paper. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -64,17 +65,83 @@ function ExpectedPaper() {
       </div>
 
       {/* Expected Paper Display */}
-      {expectedPaper ? (
-        <div className="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 p-8">
-          <h2 className="text-2xl font-bold mb-4">
-            Expected Questions (Max 20)
-          </h2>
-          <p className="text-gray-400">
-            Expected paper questions will be displayed here
-          </p>
+      {loading ? (
+        <div className={`rounded-2xl border p-8 text-center transition-all duration-300 ${
+          theme === 'dark'
+            ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10 text-gray-400'
+            : 'bg-white border-2 border-blue-200 text-gray-600'
+        }`}>
+          <div className="flex items-center justify-center gap-2">
+            <div className="h-4 w-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+            <span>Generating expected paper... This may take 30-60 seconds.</span>
+          </div>
+        </div>
+      ) : expectedPaper ? (
+        <div className={`rounded-2xl border p-8 transition-all duration-300 ${
+          theme === 'dark'
+            ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10'
+            : 'bg-white border-2 border-blue-200'
+        }`}>
+          <div className="mb-4">
+            <h2 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${
+              theme === 'dark' ? 'text-white' : 'text-gray-900'
+            }`}>
+              Expected Questions ({expectedPaper.total_questions || 0})
+            </h2>
+            {expectedPaper.based_on_topics && (
+              <p className={`text-sm transition-colors duration-300 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                Based on topics: {expectedPaper.based_on_topics.join(', ')}
+              </p>
+            )}
+          </div>
+          
+          {expectedPaper.questions && expectedPaper.questions.length > 0 ? (
+            <div className="space-y-4">
+              {expectedPaper.questions.map((q, index) => (
+                <div
+                  key={index}
+                  className={`p-4 rounded-lg border transition-all duration-300 ${
+                    theme === 'dark'
+                      ? 'bg-white/5 border-white/10'
+                      : 'bg-blue-50 border-blue-200'
+                  }`}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <span className={`font-semibold transition-colors duration-300 ${
+                      theme === 'dark' ? 'text-purple-400' : 'text-blue-600'
+                    }`}>
+                      Q{q.question_number || index + 1}
+                    </span>
+                    <span className={`text-sm transition-colors duration-300 ${
+                      theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                    }`}>
+                      {q.marks || 0} marks • {q.topic} • {q.qtype}
+                    </span>
+                  </div>
+                  <p className={`transition-colors duration-300 ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    {q.question_text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className={`transition-colors duration-300 ${
+              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+            }`}>
+              No questions generated.
+            </p>
+          )}
         </div>
       ) : (
-        <div className="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 p-8 text-center text-gray-400">
+        <div className={`rounded-2xl border p-8 text-center transition-all duration-300 ${
+          theme === 'dark'
+            ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10 text-gray-400'
+            : 'bg-white border-2 border-blue-200 text-gray-600'
+        }`}>
           Click "Generate Expected Paper" to create an expected exam paper
         </div>
       )}
