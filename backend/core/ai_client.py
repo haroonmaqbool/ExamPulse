@@ -1,6 +1,6 @@
 """
 AI Client Module
-Handles all AI interactions via OpenRouter (Grok 4.1 Fast).
+Handles all AI interactions via OpenRouter (supports Grok and DeepSeek).
 All LLM calls must go through ai_client.run_ai_prompt().
 """
 
@@ -15,20 +15,47 @@ load_dotenv()
 
 
 class AIClient:
-    """Client for interacting with AI via OpenRouter (Grok 4.1 Fast)"""
+    """Client for interacting with AI via OpenRouter (supports Grok and DeepSeek)"""
     
     def __init__(self):
         """Initialize AI client with OpenRouter API key"""
         self.api_key = os.getenv("OPENROUTER_API_KEY", "")
         
         if not self.api_key:
-            raise ValueError("OPENROUTER_API_KEY must be set in .env file")
+            raise ValueError(
+                "OPENROUTER_API_KEY must be set in .env file. "
+                "Get your API key from https://openrouter.ai/keys"
+            )
+        
+        # Validate API key format (OpenRouter keys start with sk-or-v1-)
+        if not self.api_key.startswith("sk-or-v1-"):
+            raise ValueError(
+                f"Invalid OPENROUTER_API_KEY format. "
+                f"OpenRouter API keys should start with 'sk-or-v1-'. "
+                f"Get your API key from https://openrouter.ai/keys"
+            )
         
         # OpenRouter API endpoint
         self.api_url = "https://openrouter.ai/api/v1/chat/completions"
         
-        # Model name for Grok 4.1 Fast (free)
-        self.model_name = "x-ai/grok-4.1-fast:free"
+        # Model selection: Grok or DeepSeek (configurable via .env)
+        # Options: "grok", "deepseek", "deepseek-r1", or specific model name
+        model_preference = os.getenv("AI_MODEL", "grok").lower()
+        
+        if model_preference == "deepseek-r1":
+            # DeepSeek R1 (reasoning model, free tier)
+            self.model_name = "deepseek/deepseek-r1:free"
+        elif model_preference == "grok":
+            # Grok 4.1 Fast (free)
+            self.model_name = "x-ai/grok-4.1-fast:free"
+        else:
+            # Allow custom model name
+            self.model_name = model_preference
+        
+        print(f"AI Model configured: {self.model_name}")
+        
+        # Track if we've detected an API key error (to fail fast)
+        self._api_key_invalid = False
     
     def run_ai_prompt(
         self, 
@@ -37,7 +64,7 @@ class AIClient:
         response_format: str = "json"
     ) -> Dict[str, Any]:
         """
-        Execute an AI prompt via OpenRouter (Grok 4.1 Fast).
+        Execute an AI prompt via OpenRouter (Grok or DeepSeek).
         
         This is the ONLY method that should be used for LLM calls.
         
@@ -70,7 +97,7 @@ class AIClient:
                 "content": user_prompt
             })
             
-            # Prepare request headers
+            # Prepare request headers (matching OpenRouter API format)
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
@@ -89,11 +116,11 @@ class AIClient:
             # Optional: Enable reasoning for Grok (can be enabled if needed)
             # payload["extra_body"] = {"reasoning": {"enabled": True}}
             
-            # Make API request
+            # Make API request (using json.dumps format as per OpenRouter docs)
             response = requests.post(
                 self.api_url,
                 headers=headers,
-                json=payload,
+                data=json.dumps(payload),  # Using data=json.dumps() format
                 timeout=60  # 60 second timeout
             )
             
@@ -138,10 +165,43 @@ class AIClient:
                 # Return as text
                 return {"response": response_text}
                 
+        except requests.exceptions.HTTPError as e:
+            # Handle HTTP errors (401, 403, 429, etc.)
+            status_code = e.response.status_code if hasattr(e, 'response') and e.response else None
+            
+            if status_code == 401:
+                # API key is invalid or expired
+                self._api_key_invalid = True
+                return {
+                    "error": "OpenRouter API key is invalid or expired",
+                    "error_type": "authentication_error",
+                    "error_message": "401 Unauthorized - Check your OPENROUTER_API_KEY in .env file",
+                    "help": "Get a valid API key from https://openrouter.ai/keys"
+                }
+            elif status_code == 403:
+                return {
+                    "error": "OpenRouter API access forbidden",
+                    "error_type": "authorization_error",
+                    "error_message": "403 Forbidden - Check your API key permissions"
+                }
+            elif status_code == 429:
+                return {
+                    "error": "OpenRouter API rate limit exceeded",
+                    "error_type": "rate_limit_error",
+                    "error_message": "429 Too Many Requests - Please wait before retrying"
+                }
+            else:
+                return {
+                    "error": "OpenRouter API request failed",
+                    "error_type": "http_error",
+                    "error_message": str(e),
+                    "status_code": status_code
+                }
         except requests.exceptions.RequestException as e:
-            # Handle HTTP/network errors
+            # Handle network/timeout errors
             return {
                 "error": "OpenRouter API request failed",
+                "error_type": "network_error",
                 "error_message": str(e),
                 "prompt": prompt
             }
@@ -152,6 +212,24 @@ class AIClient:
                 "error_message": str(e),
                 "prompt": prompt
             }
+
+
+    def is_api_key_valid(self) -> bool:
+        """
+        Check if API key is valid by making a test request.
+        Returns True if valid, False otherwise.
+        """
+        if self._api_key_invalid:
+            return False
+        
+        # Make a minimal test request
+        test_response = self.run_ai_prompt(
+            "Say 'test'",
+            system_instruction="You are a test assistant.",
+            response_format="text"
+        )
+        
+        return "error" not in test_response
 
 
 # Singleton instance

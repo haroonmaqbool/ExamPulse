@@ -21,6 +21,7 @@ function Upload() {
   const { theme } = useTheme()
   const isDarkMode = theme === 'dark'
   const navigate = useNavigate()
+  const fileInputRef = useRef(null)
 
   const handleFileSelect = async (file) => {
     setUploading(true)
@@ -55,9 +56,16 @@ function Upload() {
     }
   }
 
+  const handleAddAnother = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
   const handleAnalyze = () => {
-    if (fileId) {
-      navigate(`/analysis?file_id=${fileId}`)
+    if (uploadedFiles.length > 0) {
+      const fileIds = uploadedFiles.map(f => f.file_id)
+      navigate(`/analysis?file_ids=${encodeURIComponent(JSON.stringify(fileIds))}`)
     }
   }
 

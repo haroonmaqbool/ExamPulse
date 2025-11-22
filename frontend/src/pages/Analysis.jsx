@@ -22,20 +22,36 @@ function Analysis() {
   const { theme } = useTheme()
   const isDarkMode = theme === 'dark'
 
-  const fileId = searchParams.get('file_id')
+  const fileIdsParam = searchParams.get('file_ids')
+  let fileIds = []
+  if (fileIdsParam) {
+    try {
+      fileIds = JSON.parse(fileIdsParam)
+    } catch (e) {
+      console.error('Parse error for file_ids:', e)
+    }
+  }
 
-  const analyzeFile = async (id) => {
+  const analyzeFile = async (ids) => {
     setLoading(true)
     setError(null)
     setAnalysisData(null)
 
     try {
-      const response = await api.post('/analyze/', {
-        file_id: id
+      // Use a longer timeout for multi-file analysis
+      const response = await api.post('/analyze/multi', {
+        file_ids: ids
+      }, {
+        timeout: 600000 // 10 minutes for large file analysis
       })
       setAnalysisData(response.data)
     } catch (err) {
-      setError(err.message || 'Failed to analyze file')
+      // Provide more specific error messages
+      if (err.code === 'ECONNABORTED' || err.message.includes('timeout')) {
+        setError('Analysis is taking longer than expected. The backend is still processing. Please wait a moment and refresh the page, or try with fewer files.')
+      } else {
+        setError(err.message || 'Failed to analyze files')
+      }
       console.error('Analysis error:', err)
     } finally {
       setLoading(false)
@@ -43,12 +59,12 @@ function Analysis() {
   }
 
   useEffect(() => {
-    if (fileId) {
-      analyzeFile(fileId)
+    if (fileIds.length > 0) {
+      analyzeFile(fileIds)
     } else {
-      setError('No file ID provided. Please upload a file first.')
+      setError('No file IDs provided. Please upload files first.')
     }
-  }, [fileId])
+  }, [fileIdsParam])
 
   return (
     <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${
@@ -78,10 +94,12 @@ function Analysis() {
               isDarkMode ? 'text-gray-400' : 'text-gray-600'
             }`}>
               <div className="flex items-center justify-center gap-2">
-                <div className={`h-4 w-4 border-2 border-t-transparent rounded-full animate-spin ${
-                  isDarkMode ? 'border-purple-500' : 'border-blue-600'
-                }`}></div>
-                <span>Analyzing file... This may take a minute.</span>
+                <div className="h-4 w-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                <span>
+                  Analyzing {fileIds.length > 1 ? `${fileIds.length} files` : 'file'}... 
+                  {fileIds.length > 1 && 'This may take several minutes for multiple files.'}
+                  {fileIds.length === 1 && 'This may take a minute.'}
+                </span>
               </div>
             </div>
           ) : error ? (

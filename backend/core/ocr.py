@@ -1,38 +1,100 @@
 """
-OCR Module
-Hybrid OCR implementation with fallbacks.
-1. PyMuPDF (fitz) - Direct PDF text extraction (no external dependencies)
-2. Tesseract - Direct image OCR
-3. Mock OCR - Fallback for testing
+OCR Module - Main Entry Point
+Modular OCR architecture with provider-based system.
+Maintains backward compatibility with existing code.
 """
 
 from typing import Optional
 import os
-import pytesseract
-from PIL import Image
+import logging
+from pathlib import Path
 
-# Try to import PyMuPDF (fitz) - PDF text extraction
-try:
-    import fitz  # PyMuPDF
-    PYMUPDF_AVAILABLE = True
-except ImportError:
-    PYMUPDF_AVAILABLE = False
+# Import OCR providers
+from .ocr_providers import PyMuPDFOCR, TesseractOCR
 
-# Configure Tesseract path for Windows
-# On Windows, Tesseract might not be in PATH, so we set it explicitly
-TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-if os.path.exists(TESSERACT_PATH):
-    pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
+# Set up logger
+logger = logging.getLogger("ExamPulse.OCR")
+
+# Initialize providers
+_pymupdf_provider = PyMuPDFOCR()
+_tesseract_provider = TesseractOCR()
+
+
+def run_best_ocr(file_path: str) -> Optional[str]:
+    """
+    Run OCR using the best available provider for the file type.
+    
+    Strategy (priority order):
+    1. For PDFs: PyMuPDF → Tesseract (fallback)
+    2. For Images: Tesseract
+    3. Log which provider was used
+    
+    Args:
+        file_path: Path to the file (PDF or image)
+    
+    Returns:
+        Extracted text, or None if all providers fail
+    """
+    if not os.path.exists(file_path):
+        logger.error(f"File not found: {file_path}")
+        return None
+    
+    file_ext = os.path.splitext(file_path)[1].lower()
+    file_size = os.path.getsize(file_path)
+    
+    logger.info(f"Starting OCR for: {os.path.basename(file_path)} ({file_size:,} bytes, type: {file_ext})")
+    
+    # Process based on file type
+    if file_ext == '.pdf':
+        # Use PyMuPDF for PDFs
+        if _pymupdf_provider.is_available():
+            logger.info("Using PyMuPDF provider for PDF")
+            result = _pymupdf_provider.extract_text(file_path)
+            if result:
+                logger.info(f"✓ PyMuPDF OCR successful: {len(result):,} characters extracted")
+                return result
+            else:
+                logger.warning("✗ PyMuPDF OCR failed, trying Tesseract fallback...")
+        
+        # Fallback: Try Tesseract for scanned PDFs
+        if _tesseract_provider.is_available():
+            logger.info("Using Tesseract provider as fallback for PDF")
+            result = _tesseract_provider.extract_text(file_path)
+            if result:
+                logger.info(f"✓ Tesseract OCR successful: {len(result):,} characters extracted")
+                return result
+            else:
+                logger.warning("✗ Tesseract OCR failed")
+        else:
+            logger.warning("Tesseract not available")
+    
+    elif file_ext in ['.png', '.jpg', '.jpeg', '.webp', '.tiff']:
+        # Use Tesseract for images
+        if _tesseract_provider.is_available():
+            logger.info("Using Tesseract provider for image")
+            result = _tesseract_provider.extract_text(file_path)
+            if result:
+                logger.info(f"✓ Tesseract OCR successful: {len(result):,} characters extracted")
+                return result
+            else:
+                logger.warning("✗ Tesseract OCR failed")
+        else:
+            logger.warning("Tesseract not available")
+    
+    else:
+        logger.warning(f"Unsupported file type: {file_ext}")
+    
+    # All providers failed
+    logger.error("All OCR providers failed")
+    return None
 
 
 def run_ocr(file_path: str) -> Optional[str]:
     """
-    Run OCR on uploaded file.
+    Main OCR function - maintains backward compatibility.
     
-    Process:
-        1. For PDFs: Use PyMuPDF for direct text extraction
-        2. For Images: Use Tesseract OCR
-        3. If both fail: Use Mock OCR fallback
+    This is the entry point used by existing code.
+    It calls run_best_ocr() and provides fallback to mock OCR.
     
     Args:
         file_path: Path to the uploaded file (PDF or image)
@@ -40,119 +102,19 @@ def run_ocr(file_path: str) -> Optional[str]:
     Returns:
         Extracted text from the file, or mock text if extraction fails
     """
-    if not os.path.exists(file_path):
-        print(f"File not found: {file_path}")
-        return mock_ocr_fallback(file_path)
+    result = run_best_ocr(file_path)
     
-    # Get file extension to determine type
-    file_ext = os.path.splitext(file_path)[1].lower()
+    if result:
+        return result
     
-    try:
-        # Handle PDF files
-        if file_ext == '.pdf':
-            if PYMUPDF_AVAILABLE:
-                try:
-                    print("Extracting text from PDF using PyMuPDF...")
-                    return _ocr_pdf(file_path)
-                except Exception as e:
-                    print(f"PDF extraction failed: {e}")
-                    print("Falling back to mock OCR...")
-            else:
-                print("PyMuPDF not available. Install with: pip install PyMuPDF")
-                print("Falling back to mock OCR...")
-            
-            return mock_ocr_fallback(file_path)
-        
-        # Handle image files (PNG, JPG, JPEG)
-        elif file_ext in ['.png', '.jpg', '.jpeg']:
-            return _ocr_image(file_path)
-        
-        else:
-            print(f"Unsupported file type: {file_ext}")
-            return mock_ocr_fallback(file_path)
-            
-    except Exception as e:
-        print(f"OCR failed: {e}")
-        print(f"Error type: {type(e).__name__}")
-        print("Falling back to mock OCR...")
-        import traceback
-        print("Full traceback:")
-        traceback.print_exc()
-        return mock_ocr_fallback(file_path)
+    # Fallback to mock OCR for testing
+    logger.warning("Falling back to mock OCR")
+    return _mock_ocr_fallback(file_path)
 
 
-def _ocr_pdf(file_path: str) -> str:
+def _mock_ocr_fallback(file_path: str) -> str:
     """
-    Extract text from PDF using PyMuPDF (fitz).
-    
-    No external dependencies needed - works on Windows, Mac, and Linux.
-    
-    Args:
-        file_path: Path to PDF file
-    
-    Returns:
-        Extracted text from all pages
-    """
-    try:
-        # Open PDF with PyMuPDF
-        doc = fitz.open(file_path)
-        
-        # Extract text from each page
-        all_text = []
-        for page_num in range(len(doc)):
-            print(f"Processing PDF page {page_num + 1}/{len(doc)}...")
-            page = doc[page_num]
-            text = page.get_text()
-            if text.strip():
-                all_text.append(text)
-        
-        doc.close()
-        
-        if all_text:
-            return "\n\n".join(all_text)
-        else:
-            raise Exception("No text extracted from PDF")
-            
-    except Exception as e:
-        print(f"PDF extraction error: {e}")
-        raise
-
-
-
-
-def _ocr_image(file_path: str) -> str:
-    """
-    Extract text from image file using OCR.
-    
-    Args:
-        file_path: Path to image file
-    
-    Returns:
-        Extracted text
-    """
-    try:
-        # Open image
-        image = Image.open(file_path)
-        
-        # Run OCR
-        text = pytesseract.image_to_string(image, lang='eng')
-        
-        if not text.strip():
-            raise Exception("No text extracted from image")
-        
-        return text
-        
-    except Exception as e:
-        print(f"Image OCR error: {e}")
-        raise
-
-
-def mock_ocr_fallback(file_path: str) -> str:
-    """
-    Mock OCR fallback when Tesseract fails.
-    
-    This returns placeholder text for testing purposes.
-    In production, you might want to log this or handle it differently.
+    Mock OCR fallback when all providers fail.
     
     Args:
         file_path: Path to the uploaded file
@@ -162,7 +124,6 @@ def mock_ocr_fallback(file_path: str) -> str:
     """
     file_name = os.path.basename(file_path)
     
-    # Return a structured mock text that looks like exam questions
     mock_text = f"""
 MOCK OCR TEXT - File: {file_name}
 
@@ -172,15 +133,14 @@ The actual OCR failed, so this is placeholder text for testing.
 
 Question 2 (10 marks)
 Another sample question to demonstrate the mock OCR functionality.
-This would normally be extracted by Tesseract OCR.
+This would normally be extracted by OCR providers.
 
 Question 3 (15 marks)
 A third sample question showing the structure of exam papers.
 Topics: Algebra, Geometry, Calculus
 
-Note: This is mock data. Tesseract OCR was unable to process this file.
+Note: This is mock data. OCR providers were unable to process this file.
 Please check the file format and quality.
 """
     
     return mock_text.strip()
-
