@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react'
 import PlanCard from '../components/PlanCard'
 import { useTheme } from '../components/ThemeContext'
-import axios from 'axios'
+import api from '../utils/api'
 
 function SmartPlan() {
   const [plan, setPlan] = useState(null)
@@ -16,12 +16,13 @@ function SmartPlan() {
 
   const fetchSmartPlan = async () => {
     setLoading(true)
+    setPlan(null)
     try {
-      // TODO: Implement actual API call
-      const response = await axios.get('/api/smart-plan/')
+      const response = await api.get('/smart-plan/')
       setPlan(response.data.plan)
     } catch (error) {
       console.error('Failed to fetch smart plan:', error)
+      alert(error.message || 'Failed to fetch smart plan. Please try again.')
     } finally {
       setLoading(false)
     }

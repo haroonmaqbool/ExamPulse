@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { useTheme } from '../components/ThemeContext'
-import axios from 'axios'
+import api from '../utils/api'
 
 function StudyLogs() {
   const [formData, setFormData] = useState({
@@ -31,9 +31,11 @@ function StudyLogs() {
     setSubmitStatus(null)
 
     try {
-      // TODO: Implement actual API call
-      await axios.post('/api/study-logs/', formData)
-      setSubmitStatus({ success: true, message: 'Study log created successfully' })
+      const response = await api.post('/study-logs/', formData)
+      setSubmitStatus({ 
+        success: true, 
+        message: 'Study log created successfully!' 
+      })
       setFormData({
         topic: '',
         log_type: 'text',
@@ -42,7 +44,10 @@ function StudyLogs() {
         notes: ''
       })
     } catch (error) {
-      setSubmitStatus({ success: false, message: 'Failed to create study log' })
+      setSubmitStatus({ 
+        success: false, 
+        message: error.message || 'Failed to create study log. Please try again.' 
+      })
     } finally {
       setSubmitting(false)
     }
