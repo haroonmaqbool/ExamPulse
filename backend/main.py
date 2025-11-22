@@ -6,7 +6,7 @@ Entry point for the FastAPI server with CORS and route registration.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import upload, analyze, expected_paper, study_logs, smart_plan, health
+from api import upload, analyze, expected_paper, study_logs, smart_plan, health, chatbot
 
 app = FastAPI(
     title="ExamPulse API",
@@ -30,6 +30,7 @@ app.include_router(analyze.router, prefix="/analyze", tags=["analyze"])
 app.include_router(expected_paper.router, prefix="/expected-paper", tags=["expected-paper"])
 app.include_router(study_logs.router, prefix="/study-logs", tags=["study-logs"])
 app.include_router(smart_plan.router, prefix="/smart-plan", tags=["smart-plan"])
+app.include_router(chatbot.router, prefix="/chatbot", tags=["chatbot"])
 
 
 @app.get("/")
