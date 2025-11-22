@@ -10,12 +10,11 @@ function TopicChart({ data }) {
   const { theme } = useTheme()
   const isDarkMode = theme === 'dark'
 
-  // TODO: Implement chart with real data
-  const mockData = [
-    { topic: 'Algebra', frequency: 15, percentage: 30 },
-    { topic: 'Geometry', frequency: 10, percentage: 20 },
-    { topic: 'Calculus', frequency: 8, percentage: 16 },
-  ]
+  // Process real data from backend
+  // Data format: [{ topic: string, frequency: number, percentage: number }, ...]
+  const chartData = data && Array.isArray(data) && data.length > 0
+    ? data.slice(0, 10) // Limit to top 10 topics for better visualization
+    : []
 
   return (
     <div className={`rounded-2xl border p-6 transition-all duration-300 ${
@@ -26,8 +25,13 @@ function TopicChart({ data }) {
       <h3 className={`text-xl font-bold mb-6 transition-colors duration-300 ${
         isDarkMode ? 'text-white' : 'text-gray-900'
       }`}>Topic Frequency Analysis</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={mockData}>
+      {chartData.length === 0 ? (
+        <div className={`flex items-center justify-center h-[300px] ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+          <p className="text-sm">No topic data available</p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? '#374151' : '#e5e7eb'} />
           <XAxis dataKey="topic" stroke={isDarkMode ? '#9ca3af' : '#6b7280'} />
           <YAxis stroke={isDarkMode ? '#9ca3af' : '#6b7280'} />
@@ -38,9 +42,15 @@ function TopicChart({ data }) {
               borderRadius: '8px',
               color: isDarkMode ? '#fff' : '#000'
             }}
+            cursor={false}
           />
           <Legend wrapperStyle={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }} />
-          <Bar dataKey="frequency" fill="url(#colorGradient)" />
+          <Bar 
+            dataKey="frequency" 
+            fill="url(#colorGradient)"
+            radius={[8, 8, 0, 0]}
+            style={{ cursor: 'pointer' }}
+          />
           <defs>
             <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
               {isDarkMode ? (
@@ -58,6 +68,7 @@ function TopicChart({ data }) {
           </defs>
         </BarChart>
       </ResponsiveContainer>
+      )}
     </div>
   )
 }
