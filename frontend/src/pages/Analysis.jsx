@@ -12,6 +12,7 @@ import Navbar from '../components/Navbar'
 import Background from '../components/Background'
 import ShaderBackground from '../components/ShaderBackground'
 import { motion } from 'framer-motion'
+import { Upload, FileText, ArrowRight } from 'lucide-react'
 
 function Analysis() {
   const [analysisData, setAnalysisData] = useState(null)
@@ -59,9 +60,14 @@ function Analysis() {
   }
 
   useEffect(() => {
-    if (fileIds.length > 0) {
-      analyzeFile(fileIds)
+    if (fileIdsParam) {
+      if (fileIds.length > 0) {
+        analyzeFile(fileIds)
+      } else {
+        setError('Invalid file IDs. Please upload files again.')
+      }
     } else {
+      // Only set error if user navigated here directly without file IDs
       setError('No file IDs provided. Please upload files first.')
     }
   }, [fileIdsParam])
@@ -102,6 +108,92 @@ function Analysis() {
                 </span>
               </div>
             </div>
+          ) : error && error.includes('No file IDs') ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-col items-center justify-center py-16 px-6"
+            >
+              <div className={`max-w-md w-full text-center space-y-6 ${
+                isDarkMode ? 'text-white' : 'text-gray-900'
+              }`}>
+                {/* Icon */}
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="flex justify-center"
+                >
+                  <div className={`relative p-6 rounded-full ${
+                    isDarkMode
+                      ? 'bg-gradient-to-br from-purple-500/20 to-pink-500/20'
+                      : 'bg-gradient-to-br from-blue-100 to-green-100'
+                  }`}>
+                    <FileText className={`w-16 h-16 ${
+                      isDarkMode ? 'text-purple-400' : 'text-blue-600'
+                    }`} strokeWidth={1.5} />
+                  </div>
+                </motion.div>
+
+                {/* Message */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="space-y-3"
+                >
+                  <h2 className={`text-3xl font-black ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    No Files to Analyze
+                  </h2>
+                  <p className={`text-lg ${
+                    isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    Upload your exam papers to get started with AI-powered analysis
+                  </p>
+                </motion.div>
+
+                {/* CTA Button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <button
+                    onClick={() => navigate('/upload')}
+                    className={`group relative px-8 py-4 rounded-xl font-bold text-base text-white overflow-hidden transition-all duration-300 shadow-lg transform hover:scale-[1.02] active:scale-[0.98] ${
+                      isDarkMode
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/30'
+                        : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 shadow-blue-500/30'
+                    }`}
+                  >
+                    <span className="relative flex items-center gap-2">
+                      <Upload className="w-5 h-5" />
+                      Upload Files
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </span>
+                  </button>
+                </motion.div>
+
+                {/* Help Text */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className={`pt-6 border-t ${
+                    isDarkMode ? 'border-white/10' : 'border-gray-200'
+                  }`}
+                >
+                  <p className={`text-sm ${
+                    isDarkMode ? 'text-gray-500' : 'text-gray-600'
+                  }`}>
+                    Supported formats: PDF, PNG, JPG • Max 10MB per file
+                  </p>
+                </motion.div>
+              </div>
+            </motion.div>
           ) : error ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -112,17 +204,37 @@ function Analysis() {
                 ? 'bg-red-500/10 text-red-400 border-red-500/30'
                 : 'bg-red-100 text-red-700 border-red-400'
             }`}>
-              <p className="mb-4">{error}</p>
-              <button
-                onClick={() => navigate('/upload')}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-[1.02] ${
-                  isDarkMode
-                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white shadow-purple-500/30'
-                    : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 text-white shadow-blue-500/30'
-                }`}
-              >
-                Upload a File
-              </button>
+              <div className="flex items-start gap-4">
+                <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                  isDarkMode ? 'bg-red-500/20' : 'bg-red-200'
+                }`}>
+                  <svg className={`w-5 h-5 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className={`font-bold text-lg mb-2 ${
+                    isDarkMode ? 'text-red-300' : 'text-red-800'
+                  }`}>
+                    Analysis Error
+                  </h3>
+                  <p className={`mb-4 ${
+                    isDarkMode ? 'text-red-300/80' : 'text-red-700'
+                  }`}>
+                    {error}
+                  </p>
+                  <button
+                    onClick={() => navigate('/upload')}
+                    className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-[1.02] ${
+                      isDarkMode
+                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white shadow-purple-500/30'
+                        : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 text-white shadow-blue-500/30'
+                    }`}
+                  >
+                    Go to Upload
+                  </button>
+                </div>
+              </div>
             </motion.div>
           ) : analysisData ? (
             <div className="space-y-6">

@@ -16,6 +16,53 @@ VALID_LOG_TYPES = ["text", "hours", "difficulty", "checkbox"]
 VALID_DIFFICULTY_LEVELS = ["easy", "medium", "hard"]
 
 
+@router.get("/")
+async def get_study_logs() -> Dict:
+    """
+    Get all study logs from the database.
+    
+    Returns:
+        List of all study logs with statistics
+    """
+    try:
+        all_logs = db.get_all_study_logs()
+        
+        # Calculate statistics
+        total_logs = len(all_logs)
+        total_hours = sum([float(log.get('hours', 0)) for log in all_logs if log.get('hours')])
+        
+        # Group by topic
+        topic_stats = {}
+        for log in all_logs:
+            topic = log.get('topic', 'Unknown')
+            if topic not in topic_stats:
+                topic_stats[topic] = {
+                    'count': 0,
+                    'total_hours': 0,
+                    'difficulties': []
+                }
+            topic_stats[topic]['count'] += 1
+            if log.get('hours'):
+                topic_stats[topic]['total_hours'] += float(log.get('hours', 0))
+            if log.get('difficulty'):
+                topic_stats[topic]['difficulties'].append(log.get('difficulty'))
+        
+        return {
+            "logs": all_logs,
+            "statistics": {
+                "total_logs": total_logs,
+                "total_hours": round(total_hours, 2),
+                "topics_count": len(topic_stats),
+                "topic_stats": topic_stats
+            }
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to fetch study logs: {str(e)}"
+        )
+
+
 class StudyLogRequest(BaseModel):
     """Request model for study log entry"""
     topic: str = Field(..., min_length=1, description="Subject/topic name")
