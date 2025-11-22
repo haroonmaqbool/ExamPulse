@@ -10,7 +10,7 @@ function Navbar() {
   const isActive = (path) => location.pathname === path
 
   const navLinks = [
-    { path: '/home', label: 'Home' },
+    { path: '/home', label: 'Dashboard' },
     { path: '/upload', label: 'Upload' },
     { path: '/analysis', label: 'Analysis' },
     { path: '/expected-paper', label: 'Expected Paper' },
@@ -27,7 +27,7 @@ function Navbar() {
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-8 h-20">
         {/* Brand with gradient */}
         <Link
-          to="/home"
+          to="/"
           className={`flex items-center gap-2 text-2xl font-bold transition-all duration-300 ${
             isDarkMode
               ? 'bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent hover:from-purple-300 hover:via-pink-300 hover:to-purple-400'
