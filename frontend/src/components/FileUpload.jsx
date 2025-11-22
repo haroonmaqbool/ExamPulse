@@ -5,7 +5,7 @@
 
 import { useTheme } from './ThemeContext'
 
-function FileUpload({ onFileSelect }) {
+function FileUpload({ onFileSelect, inputRef }) {
   const { theme } = useTheme()
   const isDarkMode = theme === 'dark'
 
@@ -13,6 +13,10 @@ function FileUpload({ onFileSelect }) {
     const file = e.target.files[0]
     if (file) {
       onFileSelect(file)
+      // Reset input so same file can be selected again and multiple uploads are allowed
+      if (e.target) {
+        e.target.value = ''
+      }
     }
   }
 
@@ -23,6 +27,7 @@ function FileUpload({ onFileSelect }) {
         : 'border-blue-400 bg-blue-50/40 hover:border-blue-500'
     }`}>
       <input
+        ref={inputRef}
         type="file"
         accept=".pdf,.png,.jpg,.jpeg"
         onChange={handleFileChange}

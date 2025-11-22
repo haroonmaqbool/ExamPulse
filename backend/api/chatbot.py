@@ -44,16 +44,31 @@ IMPORTANT RULES:
         if chat_message.userName:
             system_prompt += f"\n- Address the user as {chat_message.userName} in your responses"
 
-        print("Sending request to OpenRouter API...")
+        # Get model preference from environment (default: grok)
+        model_preference = os.getenv("AI_MODEL", "grok").lower()
+        
+        if model_preference == "deepseek-r1":
+            model_name = "deepseek/deepseek-r1:free"
+        elif model_preference == "deepseek":
+            model_name = "deepseek/deepseek-chat:free"
+        elif model_preference == "grok":
+            model_name = "x-ai/grok-4.1-fast:free"
+        else:
+            # Allow custom model name
+            model_name = model_preference
+        
+        print(f"Sending request to OpenRouter API with model: {model_name}...")
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 "https://openrouter.ai/api/v1/chat/completions",
                 headers={
                     "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://github.com/haroonmaqbool/ExamPulse",
+                    "X-Title": "ExamPulse"
                 },
                 json={
-                    "model": "x-ai/grok-4.1-fast:free",
+                    "model": model_name,
                     "messages": [
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": chat_message.message}
