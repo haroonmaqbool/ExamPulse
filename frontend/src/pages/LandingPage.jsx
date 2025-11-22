@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import ShaderBackground from '../components/ShaderBackground';
 import { TestimonialsColumn } from '../components/TestimonialsColumn';
 import { ThemeToggle } from '../components/ThemeToggle';
-import { Target, BarChart3, Rocket, Upload, Brain, TrendingUp } from 'lucide-react';
-import { motion, useInView } from 'framer-motion';
+import { Target, BarChart3, Rocket, Upload, Brain, TrendingUp, HelpCircle } from 'lucide-react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import FAQ from '../components/FAQ';
 
 // Number counter hook
 function useCounter(end, duration = 2000, startOnView = false) {
@@ -75,6 +76,7 @@ export default function LandingPage() {
   const isDark = theme === 'dark';
   const [scrollY, setScrollY] = useState(0);
   const [activeFeature, setActiveFeature] = useState(0);
+  const [showHelpFAQ, setShowHelpFAQ] = useState(false);
   const heroRef = useRef(null);
   const testimonialsRef = useRef(null);
   const statsRef = useRef(null);
@@ -877,6 +879,100 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* FAQ Section with Modal */}
+      <AnimatePresence>
+        {showHelpFAQ && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowHelpFAQ(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl max-w-2xl w-full ${
+                isDark
+                  ? 'bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/10'
+                  : 'bg-white border border-gray-200'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className={`sticky top-0 flex items-center justify-between p-6 border-b backdrop-blur-xl ${
+                isDark
+                  ? 'bg-white/5 border-white/10'
+                  : 'bg-white border-gray-200'
+              }`}>
+                <div className="flex items-center gap-3">
+                  <div className={`p-2.5 rounded-lg ${
+                    isDark
+                      ? 'bg-purple-500/20'
+                      : 'bg-blue-100'
+                  }`}>
+                    <HelpCircle size={24} className={isDark ? 'text-purple-400' : 'text-blue-600'} />
+                  </div>
+                  <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    Help Center
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setShowHelpFAQ(false)}
+                  className={`p-2 rounded-lg transition-colors duration-300 ${
+                    isDark
+                      ? 'hover:bg-white/10 text-gray-400'
+                      : 'hover:bg-gray-100 text-gray-600'
+                  }`}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Modal Content - FAQ Component */}
+              <div className="p-6">
+                <FAQ isDark={isDark} />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Help Button */}
+      <motion.button
+        onClick={() => setShowHelpFAQ(true)}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        className={`fixed bottom-8 right-8 z-40 p-4 rounded-full shadow-2xl transition-all duration-300 group ${
+          isDark
+            ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 shadow-purple-500/30'
+            : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 shadow-blue-500/30'
+        }`}
+      >
+        <HelpCircle size={24} className="text-white" strokeWidth={2.5} />
+        <span className={`absolute -top-12 right-0 px-3 py-2 rounded-lg text-sm font-semibold text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${
+          isDark ? 'bg-gray-900' : 'bg-gray-800'
+        }`}>
+          Need Help?
+        </span>
+      </motion.button>
+
+      {/* FAQ Section */}
+      <section className={`relative z-10 py-16 px-6 lg:px-8 border-t ${
+        isDark
+          ? 'border-white/10 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent'
+          : 'border-gray-200 bg-gradient-to-b from-transparent via-blue-50/30 to-transparent'
+      }`}>
+        <FAQ isDark={isDark} />
       </section>
 
       {/* Footer */}
