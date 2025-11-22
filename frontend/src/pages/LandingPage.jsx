@@ -109,7 +109,7 @@ export default function LandingPage() {
     {
       icon: BarChart3,
       title: "Smart Analytics",
-      description: "Real-time insights into topic frequencies, question types, and difficulty levels with interactive visualizations.",
+      description: "Real-time insights into topic frequencies, question types, and difficulty levels with visualizations.",
       stat: "10K+",
       statLabel: "Questions"
     },
@@ -473,7 +473,7 @@ export default function LandingPage() {
                     {feature.description}
                   </p>
 
-                  <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-sm ${
+                  <div className={`flex items-center justify-center gap-3 px-6 py-4 h-20 rounded-xl border backdrop-blur-sm ${
                     isDark
                       ? 'bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-500/30'
                       : 'bg-gradient-to-br from-blue-50 to-green-50 border-blue-200'
@@ -485,7 +485,7 @@ export default function LandingPage() {
                     }`}>
                       {feature.stat}
                     </span>
-                    <span className={`text-sm font-bold uppercase tracking-wide ${
+                    <span className={`text-sm font-bold uppercase tracking-wide whitespace-nowrap ${
                       isDark ? 'text-gray-300' : 'text-gray-700'
                     }`}>
                       {feature.statLabel}

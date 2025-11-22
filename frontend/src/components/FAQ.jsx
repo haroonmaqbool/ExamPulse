@@ -41,10 +41,6 @@ export default function FAQ({ isDark }) {
     {
       question: "Can I export my analysis or study plan?",
       answer: "Yes, you can view your complete analysis including topic frequencies, extracted questions, and personalized study plans. Export features for documents are coming soon."
-    },
-    {
-      question: "Do you offer a free trial?",
-      answer: "Yes! You can get started with ExamPulse free. Upload papers, see analysis, and experience AI predictions before upgrading."
     }
   ];
 
