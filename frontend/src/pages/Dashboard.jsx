@@ -100,10 +100,10 @@ function Dashboard() {
           </div>
 
           {/* Main Grid Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6 auto-rows-fr">
             
             {/* Left Column - Large Cards */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-3 space-y-6">
               
               {/* Exam Countdown Card */}
               <motion.div
@@ -158,11 +158,11 @@ function Dashboard() {
               </motion.div>
 
               {/* Quick Actions Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="flex flex-wrap gap-4 -mx-2 px-2">
                 <motion.div
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
-                  className="h-full"
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
                   <Link
                     to="/upload"
@@ -191,7 +191,7 @@ function Dashboard() {
                 <motion.div
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
-                  className="h-full"
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
                   <Link
                     to="/analysis"
@@ -220,7 +220,7 @@ function Dashboard() {
                 <motion.div
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
-                  className="h-full"
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
                   <Link
                     to="/expected-paper"
@@ -249,7 +249,7 @@ function Dashboard() {
                 <motion.div
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
-                  className="h-full"
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
                   <Link
                     to="/smart-plan"
@@ -278,7 +278,7 @@ function Dashboard() {
                 <motion.div
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
-                  className="h-full"
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
                   <Link
                     to="/study-logs"
@@ -307,7 +307,7 @@ function Dashboard() {
             </div>
 
             {/* Right Column - Stats */}
-            <div className="space-y-6">
+            <div className="lg:col-span-2 space-y-6">
               
               {/* Accuracy Score */}
               <motion.div
