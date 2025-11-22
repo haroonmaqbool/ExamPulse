@@ -1,10 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import { useTheme } from './ThemeContext'
+import Logo from './Logo'
 
 function Navbar() {
   const location = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const { theme, toggleTheme } = useTheme()
   const isDarkMode = theme === 'dark'
   const isActive = (path) => location.pathname === path
@@ -36,10 +38,7 @@ function Navbar() {
       <div className={`md:hidden fixed top-0 inset-x-0 h-16 z-40 flex items-center justify-between px-6 border-b backdrop-blur-xl transition-colors duration-500 ${
         isDarkMode ? 'bg-[#0a0a0a]/80 border-white/5' : 'bg-white/90 border-gray-300'
       }`}>
-        <Link to="/" className="font-bold text-xl flex items-center gap-2">
-           <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>ExamPulse</span>
-           <span className={`h-2 w-2 rounded-full animate-pulse ${isDarkMode ? 'bg-purple-500' : 'bg-blue-600'}`} />
-        </Link>
+        <Logo />
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className={`p-2 rounded-lg ${isDarkMode ? 'text-gray-400 hover:bg-white/5' : 'text-gray-700 hover:bg-blue-50'}`}
@@ -57,8 +56,10 @@ function Navbar() {
       )}
 
       {/* Vertical Sidebar */}
-      <aside className={`fixed top-0 left-0 z-50 h-full w-64 transform transition-transform duration-300 ease-in-out border-r backdrop-blur-xl ${
+      <aside className={`fixed top-0 left-0 z-50 h-full transform transition-all duration-300 ease-in-out border-r backdrop-blur-xl ${
         isMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      } ${
+        isCollapsed ? 'w-20 md:w-20' : 'w-64'
       } ${
         isDarkMode
           ? 'bg-[#0a0a0a]/95 border-white/5'
@@ -66,32 +67,52 @@ function Navbar() {
       }`}>
         <div className="flex flex-col h-full py-6">
           
-          {/* 1. Brand Area */}
-          <div className="px-6 mb-6">
-            <Link
-              to="/"
-              className={`flex items-center gap-2 text-2xl font-bold ${
-                isDarkMode
-                  ? 'bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent'
-                  : 'bg-gradient-to-r from-blue-600 via-green-600 to-blue-700 bg-clip-text text-transparent'
-              }`}
-            >
-              ExamPulse
-              <span className={`h-2 w-2 rounded-full animate-pulse ${
-                isDarkMode ? 'bg-purple-500' : 'bg-blue-600'
-              }`} />
-            </Link>
+          {/* 1. Brand Area & Collapse Button */}
+          <div className={`px-6 mb-6 flex items-center justify-between ${isCollapsed ? 'px-3' : ''}`}>
+            <Logo collapsed={isCollapsed} />
+            {/* Collapse/Expand Button (Desktop Only) */}
+            {!isCollapsed && (
+              <button
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className={`hidden md:flex p-2 rounded-lg transition-all duration-300 ${
+                  isDarkMode
+                    ? 'text-gray-400 hover:bg-white/10 hover:text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+                title="Collapse menu"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
+            {isCollapsed && (
+              <button
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className={`hidden md:flex p-2 rounded-lg transition-all duration-300 ${
+                  isDarkMode
+                    ? 'text-gray-400 hover:bg-white/10 hover:text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+                title="Expand menu"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
           </div>
 
           {/* 2. Theme Toggle (Refined Look) */}
-          <div className="px-4 mb-8">
+          <div className={`px-4 mb-8 ${isCollapsed ? 'px-2' : ''}`}>
             <button
               onClick={toggleTheme}
-              className={`w-full group flex items-center justify-between px-3 py-2 rounded-full transition-all duration-300 border shadow-sm ${
+              className={`w-full group flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} px-3 py-2 rounded-full transition-all duration-300 border shadow-sm ${
                 isDarkMode
                   ? 'bg-white/5 hover:bg-white/10 border-white/10 text-gray-300'
                   : 'bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-600'
               }`}
+              title={isCollapsed ? (isDarkMode ? 'Dark Mode' : 'Light Mode') : ''}
             >
               <div className="flex items-center gap-2">
                 <span className={`p-1 rounded-full ${isDarkMode ? 'bg-transparent' : 'bg-white shadow-sm text-yellow-500'}`}>
@@ -99,39 +120,46 @@ function Navbar() {
                     <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 7.072l.707-.707a1 1 0 10-1.414-1.414l-.707.707a1 1 0 001.414 1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z" clipRule="evenodd" />
                   </svg>
                 </span>
-                <span className="text-xs font-semibold tracking-wide">
-                  {isDarkMode ? 'Dark Mode' : 'Light Mode'}
-                </span>
+                {!isCollapsed && (
+                  <span className="text-xs font-semibold tracking-wide">
+                    {isDarkMode ? 'Dark Mode' : 'Light Mode'}
+                  </span>
+                )}
               </div>
               
               {/* Switch Indicator */}
-              <div className={`relative w-8 h-4 rounded-full transition-colors duration-300 ${
-                isDarkMode ? 'bg-purple-500/50' : 'bg-gray-300'
-              }`}>
-                <span className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform duration-300 shadow-sm ${
-                  isDarkMode ? 'translate-x-4' : 'translate-x-0'
-                }`} />
-              </div>
+              {!isCollapsed && (
+                <div className={`relative w-8 h-4 rounded-full transition-colors duration-300 ${
+                  isDarkMode ? 'bg-purple-500/50' : 'bg-gray-300'
+                }`}>
+                  <span className={`absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform duration-300 shadow-sm ${
+                    isDarkMode ? 'translate-x-4' : 'translate-x-0'
+                  }`} />
+                </div>
+              )}
             </button>
           </div>
 
           {/* 3. Navigation Links */}
           <div className="flex-1 px-4 space-y-1 overflow-y-auto">
             {/* Optional Label for grouping */}
-            <div className={`px-4 pb-2 text-xs font-bold uppercase tracking-wider ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-              Menu
-            </div>
+            {!isCollapsed && (
+              <div className={`px-4 pb-2 text-xs font-bold uppercase tracking-wider ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                Menu
+              </div>
+            )}
             
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsMenuOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-300 rounded-xl group relative overflow-hidden ${
+                className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} px-4 py-3 text-sm font-medium transition-all duration-300 rounded-xl group relative overflow-hidden ${
                   isActive(link.path)
                     ? isDarkMode ? 'text-white' : 'text-blue-700 font-bold'
                     : isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-blue-700'
                 }`}
+                title={isCollapsed ? link.label : ''}
               >
                 {/* Active State Background & Left Border Accent */}
                 {isActive(link.path) && (
@@ -159,7 +187,9 @@ function Navbar() {
                 <span className={`relative z-10 transition-transform duration-300 ${isActive(link.path) ? 'scale-110' : 'group-hover:scale-110'}`}>
                   {link.icon}
                 </span>
-                <span className="relative z-10">{link.label}</span>
+                {!isCollapsed && (
+                  <span className="relative z-10">{link.label}</span>
+                )}
               </Link>
             ))}
           </div>

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ShaderBackground from '../components/ShaderBackground';
 import { TestimonialsColumn } from '../components/TestimonialsColumn';
 import { ThemeToggle } from '../components/ThemeToggle';
+import Logo from '../components/Logo';
 import { Target, BarChart3, Rocket, Upload, Brain, TrendingUp, HelpCircle } from 'lucide-react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import FAQ from '../components/FAQ';
@@ -226,35 +227,7 @@ export default function LandingPage() {
       }`}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="relative flex items-center justify-center w-10 h-10">
-                {isDark && (
-                  <>
-                    <div className="absolute inset-0 rounded-full bg-purple-500/20 animate-ping"></div>
-                    <div className="absolute inset-0 rounded-full bg-purple-500/10 animate-pulse"></div>
-                  </>
-                )}
-                <div className={`relative w-10 h-10 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 ${
-                  isDark
-                    ? 'bg-gradient-to-br from-purple-600 to-purple-500 shadow-purple-500/30 group-hover:shadow-purple-500/50'
-                    : 'bg-gradient-to-br from-blue-600 to-green-600 shadow-blue-500/30 group-hover:shadow-blue-500/50'
-                }`}>
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </div>
-              <div className="flex flex-col -space-y-1">
-                <span className={`text-xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  ExamPulse
-                </span>
-                <span className={`text-[10px] font-medium tracking-wider uppercase ${
-                  isDark ? 'text-purple-400' : 'text-blue-600'
-                }`}>
-                  AI Study Platform
-                </span>
-              </div>
-            </Link>
+            <Logo />
 
             <div className="hidden md:flex items-center gap-8">
               <a href="#features" className={`font-medium transition-colors duration-300 relative group ${
