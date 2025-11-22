@@ -267,7 +267,7 @@ export default function LandingPage() {
       <section ref={heroRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 lg:px-8 pt-20 pb-16">
         <div className="max-w-6xl mx-auto w-full">
           <div className="text-center space-y-6">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight">
               <span className={`block ${isDark ? 'text-white' : 'text-gray-900'}`}>
                 Know What's Coming
               </span>
@@ -282,24 +282,24 @@ export default function LandingPage() {
               </span>
             </h1>
 
-            <p className={`text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light ${
+            <p className={`text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light px-4 ${
               isDark ? 'text-gray-300' : 'text-gray-700'
             }`}>
               Upload your papers. Get instant patterns, predictions, and a study plan built for you.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 px-4">
               <Link
                 to="/home"
-                className={`group px-10 py-5 rounded-xl font-black text-lg text-white border shadow-md transform hover:scale-[1.03] transition-all duration-300 ${
+                className={`group w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 rounded-lg sm:rounded-xl font-black text-base sm:text-lg text-white border shadow-md transform hover:scale-[1.03] transition-all duration-300 ${
                   isDark
                     ? 'bg-gradient-to-r from-purple-500 to-purple-400 hover:from-purple-400 hover:to-purple-300 border-purple-300/40 shadow-purple-400/20 hover:shadow-lg hover:shadow-purple-400/40'
                     : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 border-blue-400/40 shadow-blue-400/30 hover:shadow-lg hover:shadow-blue-400/50'
                 }`}
               >
-                <span className="flex items-center gap-2.5">
+                <span className="flex items-center justify-center gap-2 sm:gap-2.5">
                   Get Predictions Now
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </span>
@@ -307,7 +307,7 @@ export default function LandingPage() {
               
               <a
                 href="#features"
-                className={`px-10 py-5 rounded-xl font-extrabold text-lg transform hover:scale-[1.03] transition-all duration-300 ${
+                className={`w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 rounded-lg sm:rounded-xl font-extrabold text-base sm:text-lg transform hover:scale-[1.03] transition-all duration-300 text-center ${
                   isDark
                     ? 'bg-white/5 backdrop-blur-xl border border-white/15 text-white hover:bg-white/8 hover:border-white/25 hover:shadow-lg hover:shadow-white/10'
                     : 'bg-white border-2 border-gray-200 text-gray-900 hover:bg-gray-50 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-100'
@@ -375,7 +375,7 @@ export default function LandingPage() {
                 Features
               </span>
             </div>
-            <h2 className={`text-4xl md:text-5xl font-black mb-4 ${
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black mb-4 ${
               isDark ? 'text-white' : 'text-gray-900'
             }`}>
               Everything You Need to
@@ -387,7 +387,7 @@ export default function LandingPage() {
                 Excel in Your Exams
               </span>
             </h2>
-            <p className={`text-lg max-w-2xl mx-auto font-light ${
+            <p className={`text-base sm:text-lg max-w-2xl mx-auto font-light px-4 ${
               isDark ? 'text-gray-300' : 'text-gray-600'
             }`}>
               Advanced AI technology that analyzes patterns across thousands of exam papers
@@ -475,12 +475,12 @@ export default function LandingPage() {
       <section className="relative z-10 py-16 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className={`text-4xl md:text-5xl font-black mb-4 ${
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black mb-4 ${
               isDark ? 'text-white' : 'text-gray-900'
             }`}>
               The Difference is Clear
             </h2>
-            <p className={`text-lg font-light ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-base sm:text-lg font-light px-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               See how ExamPulse transforms your study experience
             </p>
           </div>
@@ -597,12 +597,12 @@ export default function LandingPage() {
       <section id="how-it-works" className="relative z-10 py-16 px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className={`text-4xl md:text-5xl font-black mb-4 ${
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black mb-4 ${
               isDark ? 'text-white' : 'text-gray-900'
             }`}>
               Simple. Fast. Effective.
             </h2>
-            <p className={`text-lg font-light ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-base sm:text-lg font-light px-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               Get started in minutes, see results in days
             </p>
           </div>

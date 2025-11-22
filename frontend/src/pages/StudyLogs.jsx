@@ -264,15 +264,15 @@ function StudyLogs() {
       {isDarkMode && <ShaderBackground />}
       {!isDarkMode && <Background />}
       <Navbar />
-      <main className="pt-20 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 py-12">
+      <main className="pt-16 md:pt-20 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className={`text-5xl font-black bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
+              className={`text-3xl sm:text-4xl md:text-5xl font-black bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
                 isDarkMode
                   ? 'from-purple-400 to-pink-400'
                   : 'from-blue-600 to-green-600'
@@ -303,68 +303,68 @@ function StudyLogs() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
+              className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8"
             >
-              <div className={`rounded-xl p-6 border transition-all duration-300 ${
+              <div className={`rounded-lg sm:rounded-xl p-4 sm:p-6 border transition-all duration-300 ${
                 isDarkMode
                   ? 'bg-white/5 border-white/10'
                   : 'bg-white/80 border-blue-200 backdrop-blur-sm'
               }`}>
                 <div className="flex items-center justify-between mb-2">
-                  <BookOpen className={`w-5 h-5 ${isDarkMode ? 'text-purple-400' : 'text-blue-600'}`} />
-                  <span className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <BookOpen className={`w-4 h-4 sm:w-5 sm:h-5 ${isDarkMode ? 'text-purple-400' : 'text-blue-600'}`} />
+                  <span className={`text-xl sm:text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {statistics.total_logs}
                   </span>
                 </div>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Total Logs
                 </p>
               </div>
 
-              <div className={`rounded-xl p-6 border transition-all duration-300 ${
+              <div className={`rounded-lg sm:rounded-xl p-4 sm:p-6 border transition-all duration-300 ${
                 isDarkMode
                   ? 'bg-white/5 border-white/10'
                   : 'bg-white/80 border-green-200 backdrop-blur-sm'
               }`}>
                 <div className="flex items-center justify-between mb-2">
-                  <Clock className={`w-5 h-5 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
-                  <span className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <Clock className={`w-4 h-4 sm:w-5 sm:h-5 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
+                  <span className={`text-xl sm:text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {statistics.total_hours.toFixed(1)}h
                   </span>
                 </div>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Study Hours
                 </p>
               </div>
 
-              <div className={`rounded-xl p-6 border transition-all duration-300 ${
+              <div className={`rounded-lg sm:rounded-xl p-4 sm:p-6 border transition-all duration-300 ${
                 isDarkMode
                   ? 'bg-white/5 border-white/10'
                   : 'bg-white/80 border-purple-200 backdrop-blur-sm'
               }`}>
                 <div className="flex items-center justify-between mb-2">
-                  <Target className={`w-5 h-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
-                  <span className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <Target className={`w-4 h-4 sm:w-5 sm:h-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
+                  <span className={`text-xl sm:text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {statistics.topics_count}
                   </span>
                 </div>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Topics
                 </p>
               </div>
 
-              <div className={`rounded-xl p-6 border transition-all duration-300 ${
+              <div className={`rounded-lg sm:rounded-xl p-4 sm:p-6 border transition-all duration-300 ${
                 isDarkMode
                   ? 'bg-white/5 border-white/10'
                   : 'bg-white/80 border-pink-200 backdrop-blur-sm'
               }`}>
                 <div className="flex items-center justify-between mb-2">
-                  <BarChart3 className={`w-5 h-5 ${isDarkMode ? 'text-pink-400' : 'text-pink-600'}`} />
-                  <span className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <BarChart3 className={`w-4 h-4 sm:w-5 sm:h-5 ${isDarkMode ? 'text-pink-400' : 'text-pink-600'}`} />
+                  <span className={`text-xl sm:text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {statistics.total_logs > 0 ? Math.round((statistics.total_hours / statistics.total_logs) * 10) / 10 : 0}h
                   </span>
                 </div>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Avg per Log
                 </p>
               </div>
@@ -386,14 +386,14 @@ function StudyLogs() {
                   animate={{ y: 0 }}
                   exit={{ y: -20 }}
                   onSubmit={handleSubmit} 
-                  className={`rounded-2xl border p-8 space-y-6 transition-all duration-300 ${
+                  className={`rounded-xl sm:rounded-2xl border p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 transition-all duration-300 ${
                     isDarkMode
                       ? 'bg-white/5 border-white/10 backdrop-blur-xl'
                       : 'bg-white/80 border-blue-200 backdrop-blur-sm'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <h2 className={`text-xl sm:text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       Create New Study Log
                     </h2>
                     <button
@@ -409,7 +409,7 @@ function StudyLogs() {
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                       <label className={`block text-sm font-semibold mb-2 transition-colors duration-300 ${
                         isDarkMode ? 'text-gray-300' : 'text-gray-700'
