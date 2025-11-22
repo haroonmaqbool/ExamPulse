@@ -7,7 +7,9 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useTheme } from '../components/ThemeContext'
 import Background from '../components/Background'
+import ShaderBackground from '../components/ShaderBackground'
 import { Upload, BarChart3, FileText, Brain, BookOpen, TrendingUp, Calendar, Zap, Clock } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 function Dashboard() {
   const [isVisible, setIsVisible] = useState(false)
@@ -33,10 +35,11 @@ function Dashboard() {
   return (
     <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${
       isDarkMode 
-        ? 'bg-[#0a0a0a]' 
-        : 'bg-gray-50'
+        ? '' 
+        : 'bg-gradient-to-br from-blue-50 via-white to-green-50'
     }`}>
-      <Background />
+      {isDarkMode && <ShaderBackground />}
+      {!isDarkMode && <Background />}
 
       <main className="relative z-10 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
         <div className={`max-w-7xl mx-auto transition-all duration-700 ${
@@ -47,7 +50,7 @@ function Dashboard() {
           <div className="mb-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
               <div>
-                <h1 className={`text-3xl font-bold mb-1 ${
+                <h1 className={`text-5xl font-black mb-1 ${
                   isDarkMode ? 'text-white' : 'text-gray-900'
                 }`}>
                   Dashboard
@@ -62,8 +65,8 @@ function Dashboard() {
               
               {/* Quick Stats Bar */}
               <div className="flex flex-wrap gap-4">
-                <div className={`px-4 py-2 rounded-lg ${
-                  isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white border border-gray-200'
+                <div className={`px-4 py-2 rounded-xl backdrop-blur-sm ${
+                  isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white/80 border border-blue-200 shadow-sm'
                 }`}>
                   <div className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
                     Papers
@@ -72,8 +75,8 @@ function Dashboard() {
                     {dashboardData.totalPapersUploaded}
                   </div>
                 </div>
-                <div className={`px-4 py-2 rounded-lg ${
-                  isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white border border-gray-200'
+                <div className={`px-4 py-2 rounded-xl backdrop-blur-sm ${
+                  isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white/80 border border-blue-200 shadow-sm'
                 }`}>
                   <div className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
                     Topics
@@ -82,8 +85,8 @@ function Dashboard() {
                     {dashboardData.topicsAnalyzed}
                   </div>
                 </div>
-                <div className={`px-4 py-2 rounded-lg ${
-                  isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white border border-gray-200'
+                <div className={`px-4 py-2 rounded-xl backdrop-blur-sm ${
+                  isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white/80 border border-blue-200 shadow-sm'
                 }`}>
                   <div className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
                     Streak
@@ -97,16 +100,20 @@ function Dashboard() {
           </div>
 
           {/* Main Grid Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6 auto-rows-fr">
             
             {/* Left Column - Large Cards */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-3 space-y-6">
               
               {/* Exam Countdown Card */}
-              <div className={`relative overflow-hidden rounded-2xl p-8 ${
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className={`relative overflow-hidden rounded-2xl p-8 ${
                 isDarkMode
                   ? 'bg-gradient-to-br from-purple-900/40 to-pink-900/40 border border-purple-500/20'
-                  : 'bg-gradient-to-br from-purple-500 to-pink-500'
+                  : 'bg-gradient-to-br from-blue-600 to-green-600'
               }`}>
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
                 <div className="relative">
@@ -148,135 +155,169 @@ function Dashboard() {
                     </Link>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Quick Actions Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                <Link
-                  to="/upload"
-                  className={`group relative p-6 rounded-xl transition-all hover:scale-[1.02] ${
-                    isDarkMode
-                      ? 'bg-white/5 border border-white/10 hover:bg-white/10'
-                      : 'bg-white border border-gray-200 hover:shadow-md'
-                  }`}
+              <div className="flex flex-wrap gap-4 -mx-2 px-2">
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.2 }}
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
-                  <Upload className={`w-8 h-8 mb-3 ${
-                    isDarkMode ? 'text-purple-400' : 'text-purple-600'
-                  }`} strokeWidth={1.5} />
-                  <h3 className={`font-semibold text-sm ${
-                    isDarkMode ? 'text-white' : 'text-gray-900'
-                  }`}>
-                    Upload
-                  </h3>
-                  <p className={`text-xs mt-1 ${
-                    isDarkMode ? 'text-gray-500' : 'text-gray-600'
-                  }`}>
-                    Add papers
-                  </p>
-                </Link>
+                  <Link
+                    to="/upload"
+                    className={`group relative p-6 rounded-xl transition-all h-full flex flex-col ${
+                      isDarkMode
+                        ? 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/30'
+                        : 'bg-white/80 border border-blue-200 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-200/50 backdrop-blur-sm'
+                    }`}
+                  >
+                    <Upload className={`w-8 h-8 mb-3 ${
+                      isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                    }`} strokeWidth={1.5} />
+                    <h3 className={`font-semibold text-sm ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      Upload
+                    </h3>
+                    <p className={`text-xs mt-1 ${
+                      isDarkMode ? 'text-gray-500' : 'text-gray-600'
+                    }`}>
+                      Add papers
+                    </p>
+                  </Link>
+                </motion.div>
 
-                <Link
-                  to="/analysis"
-                  className={`group relative p-6 rounded-xl transition-all hover:scale-[1.02] ${
-                    isDarkMode
-                      ? 'bg-white/5 border border-white/10 hover:bg-white/10'
-                      : 'bg-white border border-gray-200 hover:shadow-md'
-                  }`}
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.2 }}
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
-                  <BarChart3 className={`w-8 h-8 mb-3 ${
-                    isDarkMode ? 'text-pink-400' : 'text-pink-600'
-                  }`} strokeWidth={1.5} />
-                  <h3 className={`font-semibold text-sm ${
-                    isDarkMode ? 'text-white' : 'text-gray-900'
-                  }`}>
-                    Patterns
-                  </h3>
-                  <p className={`text-xs mt-1 ${
-                    isDarkMode ? 'text-gray-500' : 'text-gray-600'
-                  }`}>
-                    View insights
-                  </p>
-                </Link>
+                  <Link
+                    to="/analysis"
+                    className={`group relative p-6 rounded-xl transition-all h-full flex flex-col ${
+                      isDarkMode
+                        ? 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-green-500/50 hover:shadow-lg hover:shadow-green-500/30'
+                        : 'bg-white/80 border border-green-200 hover:border-green-400 hover:shadow-lg hover:shadow-green-200/50 backdrop-blur-sm'
+                    }`}
+                  >
+                    <BarChart3 className={`w-8 h-8 mb-3 ${
+                      isDarkMode ? 'text-green-400' : 'text-green-600'
+                    }`} strokeWidth={1.5} />
+                    <h3 className={`font-semibold text-sm ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      Patterns
+                    </h3>
+                    <p className={`text-xs mt-1 ${
+                      isDarkMode ? 'text-gray-500' : 'text-gray-600'
+                    }`}>
+                      View insights
+                    </p>
+                  </Link>
+                </motion.div>
 
-                <Link
-                  to="/expected-paper"
-                  className={`group relative p-6 rounded-xl transition-all hover:scale-[1.02] ${
-                    isDarkMode
-                      ? 'bg-white/5 border border-white/10 hover:bg-white/10'
-                      : 'bg-white border border-gray-200 hover:shadow-md'
-                  }`}
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.2 }}
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
-                  <FileText className={`w-8 h-8 mb-3 ${
-                    isDarkMode ? 'text-blue-400' : 'text-blue-600'
-                  }`} strokeWidth={1.5} />
-                  <h3 className={`font-semibold text-sm ${
-                    isDarkMode ? 'text-white' : 'text-gray-900'
-                  }`}>
-                    Expected
-                  </h3>
-                  <p className={`text-xs mt-1 ${
-                    isDarkMode ? 'text-gray-500' : 'text-gray-600'
-                  }`}>
-                    AI predictions
-                  </p>
-                </Link>
+                  <Link
+                    to="/expected-paper"
+                    className={`group relative p-6 rounded-xl transition-all h-full flex flex-col ${
+                      isDarkMode
+                        ? 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/30'
+                        : 'bg-white/80 border border-purple-200 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-200/50 backdrop-blur-sm'
+                    }`}
+                  >
+                    <FileText className={`w-8 h-8 mb-3 ${
+                      isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                    }`} strokeWidth={1.5} />
+                    <h3 className={`font-semibold text-sm ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      Expected
+                    </h3>
+                    <p className={`text-xs mt-1 ${
+                      isDarkMode ? 'text-gray-500' : 'text-gray-600'
+                    }`}>
+                      AI predictions
+                    </p>
+                  </Link>
+                </motion.div>
 
-                <Link
-                  to="/smart-plan"
-                  className={`group relative p-6 rounded-xl transition-all hover:scale-[1.02] ${
-                    isDarkMode
-                      ? 'bg-white/5 border border-white/10 hover:bg-white/10'
-                      : 'bg-white border border-gray-200 hover:shadow-md'
-                  }`}
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.2 }}
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
-                  <Brain className={`w-8 h-8 mb-3 ${
-                    isDarkMode ? 'text-indigo-400' : 'text-indigo-600'
-                  }`} strokeWidth={1.5} />
-                  <h3 className={`font-semibold text-sm ${
-                    isDarkMode ? 'text-white' : 'text-gray-900'
-                  }`}>
-                    Smart Plan
-                  </h3>
-                  <p className={`text-xs mt-1 ${
-                    isDarkMode ? 'text-gray-500' : 'text-gray-600'
-                  }`}>
-                    Study guide
-                  </p>
-                </Link>
+                  <Link
+                    to="/smart-plan"
+                    className={`group relative p-6 rounded-xl transition-all h-full flex flex-col ${
+                      isDarkMode
+                        ? 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-pink-500/50 hover:shadow-lg hover:shadow-pink-500/30'
+                        : 'bg-white/80 border border-pink-200 hover:border-pink-400 hover:shadow-lg hover:shadow-pink-200/50 backdrop-blur-sm'
+                    }`}
+                  >
+                    <Brain className={`w-8 h-8 mb-3 ${
+                      isDarkMode ? 'text-pink-400' : 'text-pink-600'
+                    }`} strokeWidth={1.5} />
+                    <h3 className={`font-semibold text-sm ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      Smart Plan
+                    </h3>
+                    <p className={`text-xs mt-1 ${
+                      isDarkMode ? 'text-gray-500' : 'text-gray-600'
+                    }`}>
+                      Study guide
+                    </p>
+                  </Link>
+                </motion.div>
 
-                <Link
-                  to="/study-logs"
-                  className={`group relative p-6 rounded-xl transition-all hover:scale-[1.02] ${
-                    isDarkMode
-                      ? 'bg-white/5 border border-white/10 hover:bg-white/10'
-                      : 'bg-white border border-gray-200 hover:shadow-md'
-                  }`}
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.2 }}
+                  className="h-full flex-1 min-w-[calc(50%-8px)] sm:min-w-[calc(33.333%-10px)] lg:min-w-[calc(20%-12px)]"
                 >
-                  <BookOpen className={`w-8 h-8 mb-3 ${
-                    isDarkMode ? 'text-green-400' : 'text-green-600'
-                  }`} strokeWidth={1.5} />
-                  <h3 className={`font-semibold text-sm ${
-                    isDarkMode ? 'text-white' : 'text-gray-900'
-                  }`}>
-                    Study Logs
-                  </h3>
-                  <p className={`text-xs mt-1 ${
-                    isDarkMode ? 'text-gray-500' : 'text-gray-600'
-                  }`}>
-                    Track progress
-                  </p>
-                </Link>
+                  <Link
+                    to="/study-logs"
+                    className={`group relative p-6 rounded-xl transition-all h-full flex flex-col ${
+                      isDarkMode
+                        ? 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/30'
+                        : 'bg-white/80 border border-cyan-200 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-200/50 backdrop-blur-sm'
+                    }`}
+                  >
+                    <BookOpen className={`w-8 h-8 mb-3 ${
+                      isDarkMode ? 'text-cyan-400' : 'text-cyan-600'
+                    }`} strokeWidth={1.5} />
+                    <h3 className={`font-semibold text-sm ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      Study Logs
+                    </h3>
+                    <p className={`text-xs mt-1 ${
+                      isDarkMode ? 'text-gray-500' : 'text-gray-600'
+                    }`}>
+                      Track progress
+                    </p>
+                  </Link>
+                </motion.div>
               </div>
             </div>
 
             {/* Right Column - Stats */}
-            <div className="space-y-6">
+            <div className="lg:col-span-2 space-y-6">
               
               {/* Accuracy Score */}
-              <div className={`rounded-2xl p-6 ${
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className={`rounded-2xl p-6 ${
                 isDarkMode
                   ? 'bg-white/5 border border-white/10'
-                  : 'bg-white border border-gray-200'
+                  : 'bg-white/80 border border-blue-200 backdrop-blur-sm'
               }`}>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className={`text-sm font-medium ${
@@ -311,13 +352,17 @@ function Dashboard() {
                     style={{ width: `${dashboardData.accuracyScore}%` }}
                   />
                 </div>
-              </div>
+              </motion.div>
 
               {/* Predicted Questions */}
-              <div className={`rounded-2xl p-6 ${
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className={`rounded-2xl p-6 ${
                 isDarkMode
                   ? 'bg-white/5 border border-white/10'
-                  : 'bg-white border border-gray-200'
+                  : 'bg-white/80 border border-green-200 backdrop-blur-sm'
               }`}>
                 <h3 className={`text-sm font-medium mb-4 ${
                   isDarkMode ? 'text-gray-400' : 'text-gray-600'
@@ -342,13 +387,17 @@ function Dashboard() {
                 >
                   View all →
                 </Link>
-              </div>
+              </motion.div>
 
               {/* Study Progress */}
-              <div className={`rounded-2xl p-6 ${
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className={`rounded-2xl p-6 ${
                 isDarkMode
                   ? 'bg-white/5 border border-white/10'
-                  : 'bg-white border border-gray-200'
+                  : 'bg-white/80 border border-purple-200 backdrop-blur-sm'
               }`}>
                 <h3 className={`text-sm font-medium mb-4 ${
                   isDarkMode ? 'text-gray-400' : 'text-gray-600'
@@ -397,15 +446,19 @@ function Dashboard() {
                 }`}>
                   Keep going! You're doing great.
                 </p>
-              </div>
+              </motion.div>
             </div>
           </div>
 
           {/* Bottom Tip Card */}
-          <div className={`rounded-2xl p-6 ${
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className={`rounded-2xl p-6 backdrop-blur-sm ${
             isDarkMode
-              ? 'bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-500/20'
-              : 'bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200'
+              ? 'bg-gradient-to-r from-blue-900/20 to-cyan-900/20 border border-blue-500/20'
+              : 'bg-gradient-to-r from-blue-100/50 to-green-100/50 border border-blue-300'
           }`}>
             <div className="flex items-start gap-4">
               <div className={`p-2 rounded-lg ${
@@ -428,7 +481,7 @@ function Dashboard() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </main>
     </div>
