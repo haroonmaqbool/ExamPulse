@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Chatbot from './components/Chatbot'
-import Home from './pages/Home'
+import Dashboard from './pages/Dashboard'
 import Upload from './pages/Upload'
 import Analysis from './pages/Analysis'
 import ExpectedPaper from './pages/ExpectedPaper'
@@ -51,7 +51,7 @@ function AppContent() {
 
         {/* Main app routes - with navbar and chatbot */}
         <Route element={<AppLayout />}>
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<Dashboard />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/expected-paper" element={<ExpectedPaper />} />

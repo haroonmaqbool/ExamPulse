@@ -8,6 +8,7 @@ import api from '../utils/api'
 import { useTheme } from '../components/ThemeContext'
 import Navbar from '../components/Navbar'
 import Background from '../components/Background'
+import GeneratingLoader from '../components/GeneratingLoader'
 
 function ExpectedPaper() {
   const [expectedPaper, setExpectedPaper] = useState(null)
@@ -36,6 +37,7 @@ function ExpectedPaper() {
     }`}>
       <Background />
       <Navbar />
+      
       <main className="pt-20 relative z-10">
         <div className="max-w-6xl mx-auto px-6 py-12">
           {/* Header with title */}
@@ -71,15 +73,12 @@ function ExpectedPaper() {
 
           {/* Expected Paper Display */}
           {loading ? (
-            <div className={`rounded-2xl border p-8 text-center transition-all duration-300 ${
+            <div className={`rounded-2xl border transition-all duration-300 ${
               theme === 'dark'
-                ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10 text-gray-400'
-                : 'bg-white border-2 border-blue-200 text-gray-600'
+                ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10'
+                : 'bg-white border-2 border-blue-200'
             }`}>
-              <div className="flex items-center justify-center gap-2">
-                <div className="h-4 w-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-                <span>Generating expected paper... This may take 30-60 seconds.</span>
-              </div>
+              <GeneratingLoader text="Generating" />
             </div>
           ) : expectedPaper ? (
             <div className={`rounded-2xl border p-8 transition-all duration-300 ${
