@@ -27,7 +27,7 @@ const ShaderBackground = () => {
     const float minorLineFrequency = 1.0;
     const vec4 gridColor = vec4(0.5);
     const float scale = 5.0;
-    const vec4 lineColor = vec4(0.4, 0.2, 0.7, 0.8);
+    const vec4 lineColor = vec4(0.4, 0.2, 0.7, 0.25);
     const float minLineWidth = 0.008;
     const float maxLineWidth = 0.15;
     const float lineSpeed = 0.8 * overallSpeed;
@@ -101,7 +101,7 @@ const ShaderBackground = () => {
       fragColor = mix(bgColor1, bgColor2, uv.x);
       fragColor *= verticalFade;
       fragColor.a = 1.0;
-      fragColor += lines * 0.7;
+      fragColor += lines * 0.15;
 
       gl_FragColor = fragColor;
     }
@@ -247,7 +247,7 @@ const ShaderBackground = () => {
         width: '100vw', 
         height: '100vh',
         display: 'block',
-        opacity: '0.65'
+        opacity: '0.25'
       }}
     />
   );
