@@ -268,10 +268,12 @@ def _extract_questions_line_based(lines: List[str]) -> List[Dict[str, Any]]:
                     marks = int(marks_match.group(1)) if marks_match else None
                     
                     cleaned_text = clean_question_text(question_text)
-                    
+
                     # Check if MCQ was reconstructed
                     if '\n' in cleaned_text and re.search(r'^[A-D][\.\)]\s+', cleaned_text, re.MULTILINE):
-                        logger.debug(f"Extracted Q{question_num} (MCQ with {len(re.findall(r'^[A-D][\.\)]', cleaned_text, re.MULTILINE))} options)")
+                        option_pattern = r'^[A-D][\.\)]'
+                        option_count = len(re.findall(option_pattern, cleaned_text, re.MULTILINE))
+                        logger.debug(f"Extracted Q{question_num} (MCQ with {option_count} options)")
                     
                     if cleaned_text:
                         questions.append({
@@ -317,10 +319,12 @@ def _extract_questions_line_based(lines: List[str]) -> List[Dict[str, Any]]:
                                     marks_match = re.search(r'\((\d+)\s*marks?\)', question_text, re.IGNORECASE)
                                     marks = int(marks_match.group(1)) if marks_match else None
                                     cleaned_text = clean_question_text(question_text)
-                                    
+
                                     # Check if MCQ was reconstructed
                                     if '\n' in cleaned_text and re.search(r'^[A-D][\.\)]\s+', cleaned_text, re.MULTILINE):
-                                        logger.debug(f"Extracted Q{question_num} (MCQ with {len(re.findall(r'^[A-D][\.\)]', cleaned_text, re.MULTILINE))} options)")
+                                        option_pattern = r'^[A-D][\.\)]'
+                                        option_count = len(re.findall(option_pattern, cleaned_text, re.MULTILINE))
+                                        logger.debug(f"Extracted Q{question_num} (MCQ with {option_count} options)")
                                     
                                     if cleaned_text:
                                         questions.append({
@@ -440,10 +444,12 @@ def _extract_questions_simple(ocr_text: str) -> List[Dict[str, Any]]:
                     # Try to extract marks from the question
                     marks_match = re.search(r'\((\d+)\s*marks?\)', '\n'.join(current_question), re.IGNORECASE)
                     marks = int(marks_match.group(1)) if marks_match else None
-                    
+
                     # Check if MCQ was reconstructed
                     if '\n' in text and re.search(r'^[A-D][\.\)]\s+', text, re.MULTILINE):
-                        logger.debug(f"Extracted Q{question_num} (MCQ with {len(re.findall(r'^[A-D][\.\)]', text, re.MULTILINE))} options)")
+                        option_pattern = r'^[A-D][\.\)]'
+                        option_count = len(re.findall(option_pattern, text, re.MULTILINE))
+                        logger.debug(f"Extracted Q{question_num} (MCQ with {option_count} options)")
                     
                     questions.append({
                         'question_number': question_num,
@@ -464,10 +470,12 @@ def _extract_questions_simple(ocr_text: str) -> List[Dict[str, Any]]:
         if text and len(text) > 10:
             marks_match = re.search(r'\((\d+)\s*marks?\)', '\n'.join(current_question), re.IGNORECASE)
             marks = int(marks_match.group(1)) if marks_match else None
-            
+
             # Check if MCQ was reconstructed
             if '\n' in text and re.search(r'^[A-D][\.\)]\s+', text, re.MULTILINE):
-                logger.debug(f"Extracted Q{question_num} (MCQ with {len(re.findall(r'^[A-D][\.\)]', text, re.MULTILINE))} options)")
+                option_pattern = r'^[A-D][\.\)]'
+                option_count = len(re.findall(option_pattern, text, re.MULTILINE))
+                logger.debug(f"Extracted Q{question_num} (MCQ with {option_count} options)")
             
             questions.append({
                 'question_number': question_num,
