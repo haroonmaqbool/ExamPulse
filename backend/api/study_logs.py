@@ -152,3 +152,62 @@ async def create_study_log(request: StudyLogRequest) -> Dict:
             detail=f"Failed to create study log: {str(e)}"
         )
 
+
+@router.delete("/{log_id}")
+async def delete_study_log(log_id: str) -> Dict:
+    """
+    Delete a study log by ID.
+    
+    Args:
+        log_id: The ID of the study log to delete
+    
+    Returns:
+        Success message
+    """
+    try:
+        success = db.delete_study_log(log_id)
+        if not success:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to delete study log"
+            )
+        
+        return {
+            "message": "Study log deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to delete study log: {str(e)}"
+        )
+
+
+@router.delete("/")
+async def delete_all_study_logs() -> Dict:
+    """
+    Delete all study logs from the database.
+    
+    Returns:
+        Success message
+    """
+    try:
+        success = db.delete_all_study_logs()
+        if not success:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to delete all study logs"
+            )
+        
+        return {
+            "message": "All study logs deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to delete all study logs: {str(e)}"
+        )
+
