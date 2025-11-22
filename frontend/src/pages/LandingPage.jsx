@@ -72,6 +72,7 @@ function useCounter(end, duration = 2000, startOnView = false) {
 
 export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
   const [scrollY, setScrollY] = useState(0);
   const [activeFeature, setActiveFeature] = useState(0);
   const heroRef = useRef(null);
@@ -168,8 +169,8 @@ export default function LandingPage() {
   const testimonialsColumn2 = testimonials.slice(3, 6);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <ShaderBackground />
+    <div className={`min-h-screen relative overflow-hidden ${isDark ? '' : 'bg-gradient-to-br from-blue-50 via-white to-green-50'}`}>
+      {isDark && <ShaderBackground />}
       
       {/* Sticky Top Bar CTA */}
       {scrollY > 300 && (
@@ -177,20 +178,32 @@ export default function LandingPage() {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed top-20 left-0 right-0 z-40 bg-black/90 backdrop-blur-2xl border-b border-white/10"
-          style={{ 
+          className={`fixed top-20 left-0 right-0 z-40 backdrop-blur-2xl border-b ${
+            isDark 
+              ? 'bg-black/90 border-white/10' 
+              : 'bg-white/95 border-gray-200 shadow-sm'
+          }`}
+          style={isDark ? { 
             boxShadow: '0 1px 0 0 rgba(255,255,255,0.05), 0 4px 12px 0 rgba(0,0,0,0.5)'
-          }}
+          } : {}}
         >
           <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-center sm:justify-between">
             <div className="hidden sm:flex items-center gap-2.5">
-              <span className="text-[13px] font-semibold text-white tracking-tight">Limited time</span>
+              <span className={`text-[13px] font-semibold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                Limited time
+              </span>
               <span className="text-gray-600">—</span>
-              <span className="text-[13px] font-medium text-gray-400">Get AI predictions free</span>
+              <span className={`text-[13px] font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                Get AI predictions free
+              </span>
             </div>
             <Link
               to="/home"
-              className="group inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white rounded-full text-[13px] font-semibold tracking-tight transition-all duration-200 ease-out shadow-lg shadow-purple-500/30"
+              className={`group inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold tracking-tight transition-all duration-200 ease-out shadow-lg ${
+                isDark
+                  ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white shadow-purple-500/30'
+                  : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 text-white shadow-blue-500/30'
+              }`}
             >
               <span>Try free</span>
               <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
@@ -204,39 +217,67 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrollY > 50
-          ? 'bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-2xl'
+          ? isDark
+            ? 'bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-2xl'
+            : 'bg-white/90 backdrop-blur-2xl border-b border-gray-200 shadow-lg'
           : 'bg-transparent'
       }`}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <Link to="/" className="flex items-center gap-2.5 group">
               <div className="relative flex items-center justify-center w-10 h-10">
-                <div className="absolute inset-0 rounded-full bg-purple-500/20 animate-ping"></div>
-                <div className="absolute inset-0 rounded-full bg-purple-500/10 animate-pulse"></div>
-                <div className="relative w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-500 rounded-full flex items-center justify-center shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all duration-300">
+                {isDark && (
+                  <>
+                    <div className="absolute inset-0 rounded-full bg-purple-500/20 animate-ping"></div>
+                    <div className="absolute inset-0 rounded-full bg-purple-500/10 animate-pulse"></div>
+                  </>
+                )}
+                <div className={`relative w-10 h-10 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 ${
+                  isDark
+                    ? 'bg-gradient-to-br from-purple-600 to-purple-500 shadow-purple-500/30 group-hover:shadow-purple-500/50'
+                    : 'bg-gradient-to-br from-blue-600 to-green-600 shadow-blue-500/30 group-hover:shadow-blue-500/50'
+                }`}>
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
               </div>
               <div className="flex flex-col -space-y-1">
-                <span className="text-xl font-bold text-white tracking-tight">ExamPulse</span>
-                <span className="text-[10px] font-medium text-purple-400 tracking-wider uppercase">AI Study Platform</span>
+                <span className={`text-xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  ExamPulse
+                </span>
+                <span className={`text-[10px] font-medium tracking-wider uppercase ${
+                  isDark ? 'text-purple-400' : 'text-blue-600'
+                }`}>
+                  AI Study Platform
+                </span>
               </div>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-gray-300 hover:text-white font-medium transition-colors duration-300 relative group">
+              <a href="#features" className={`font-medium transition-colors duration-300 relative group ${
+                isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-blue-600'
+              }`}>
                 Features
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
+                  isDark ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-600 to-green-600'
+                }`}></span>
               </a>
-              <a href="#how-it-works" className="text-gray-300 hover:text-white font-medium transition-colors duration-300 relative group">
+              <a href="#how-it-works" className={`font-medium transition-colors duration-300 relative group ${
+                isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-blue-600'
+              }`}>
                 How It Works
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
+                  isDark ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-600 to-green-600'
+                }`}></span>
               </a>
-              <a href="#testimonials" className="text-gray-300 hover:text-white font-medium transition-colors duration-300 relative group">
+              <a href="#testimonials" className={`font-medium transition-colors duration-300 relative group ${
+                isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-blue-600'
+              }`}>
                 Testimonials
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
+                  isDark ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-600 to-green-600'
+                }`}></span>
               </a>
             </div>
 
@@ -252,22 +293,34 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto w-full">
           <div className="text-center space-y-6">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight">
-              <span className="block text-white">Know What's Coming</span>
+              <span className={`block ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                Know What's Coming
+              </span>
               <span className="block">
-                <span className="bg-gradient-to-r from-purple-400 via-purple-300 to-purple-400 bg-clip-text text-transparent">
+                <span className={`bg-clip-text text-transparent ${
+                  isDark
+                    ? 'bg-gradient-to-r from-purple-400 via-purple-300 to-purple-400'
+                    : 'bg-gradient-to-r from-blue-600 via-blue-500 to-green-600'
+                }`}>
                   Before the Exam Does
                 </span>
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-light">
+            <p className={`text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light ${
+              isDark ? 'text-gray-300' : 'text-gray-700'
+            }`}>
               Upload your papers. Get instant patterns, predictions, and a study plan built for you.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               <Link
                 to="/home"
-                className="group px-10 py-5 bg-gradient-to-r from-purple-500 to-purple-400 hover:from-purple-400 hover:to-purple-300 rounded-xl font-black text-lg text-white border border-purple-300/40 shadow-md shadow-purple-400/20 hover:shadow-lg hover:shadow-purple-400/40 transform hover:scale-[1.03] transition-all duration-300"
+                className={`group px-10 py-5 rounded-xl font-black text-lg text-white border shadow-md transform hover:scale-[1.03] transition-all duration-300 ${
+                  isDark
+                    ? 'bg-gradient-to-r from-purple-500 to-purple-400 hover:from-purple-400 hover:to-purple-300 border-purple-300/40 shadow-purple-400/20 hover:shadow-lg hover:shadow-purple-400/40'
+                    : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 border-blue-400/40 shadow-blue-400/30 hover:shadow-lg hover:shadow-blue-400/50'
+                }`}
               >
                 <span className="flex items-center gap-2.5">
                   Get Predictions Now
@@ -279,14 +332,22 @@ export default function LandingPage() {
               
               <a
                 href="#features"
-                className="px-10 py-5 bg-white/5 backdrop-blur-xl border border-white/15 rounded-xl font-extrabold text-lg text-white hover:bg-white/8 hover:border-white/25 hover:shadow-lg hover:shadow-white/10 transform hover:scale-[1.03] transition-all duration-300"
+                className={`px-10 py-5 rounded-xl font-extrabold text-lg transform hover:scale-[1.03] transition-all duration-300 ${
+                  isDark
+                    ? 'bg-white/5 backdrop-blur-xl border border-white/15 text-white hover:bg-white/8 hover:border-white/25 hover:shadow-lg hover:shadow-white/10'
+                    : 'bg-white border-2 border-gray-200 text-gray-900 hover:bg-gray-50 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-100'
+                }`}
               >
                 See How It Works
               </a>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-6">
-              <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+              <div className={`flex items-center gap-3 px-4 py-2 rounded-full border ${
+                isDark
+                  ? 'bg-white/5 border-white/10'
+                  : 'bg-white border-gray-200 shadow-sm'
+              }`}>
                 <div className="flex -space-x-3">
                   {[
                     "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
@@ -294,12 +355,20 @@ export default function LandingPage() {
                     "https://api.dicebear.com/7.x/avataaars/svg?seed=Jasmine",
                     "https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver"
                   ].map((src, i) => (
-                    <img key={i} src={src} alt="" className="w-8 h-8 rounded-full border-2 border-black" />
+                    <img key={i} src={src} alt="" className={`w-8 h-8 rounded-full border-2 ${
+                      isDark ? 'border-black' : 'border-white'
+                    }`} />
                   ))}
                 </div>
-                <span className="text-sm font-medium text-gray-300">1,000+ students</span>
+                <span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  1,000+ students
+                </span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-full border ${
+                isDark
+                  ? 'bg-white/5 border-white/10'
+                  : 'bg-white border-gray-200 shadow-sm'
+              }`}>
                 <div className="flex gap-0.5">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -307,7 +376,9 @@ export default function LandingPage() {
                     </svg>
                   ))}
                 </div>
-                <span className="text-sm font-medium text-gray-300">4.9 out of 5</span>
+                <span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  4.9 out of 5
+                </span>
               </div>
             </div>
           </div>
@@ -318,14 +389,32 @@ export default function LandingPage() {
       <section id="features" className="relative z-10 py-16 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <div className="inline-block px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 mb-6">
-              <span className="text-sm font-semibold text-purple-300 uppercase tracking-wide">Features</span>
+            <div className={`inline-block px-4 py-2 rounded-full border mb-6 ${
+              isDark
+                ? 'bg-purple-500/10 border-purple-500/30'
+                : 'bg-blue-50 border-blue-200'
+            }`}>
+              <span className={`text-sm font-semibold uppercase tracking-wide ${
+                isDark ? 'text-purple-300' : 'text-blue-700'
+              }`}>
+                Features
+              </span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+            <h2 className={`text-4xl md:text-5xl font-black mb-4 ${
+              isDark ? 'text-white' : 'text-gray-900'
+            }`}>
               Everything You Need to
-              <span className="block text-purple-400">Excel in Your Exams</span>
+              <span className={`block bg-clip-text text-transparent ${
+                isDark
+                  ? 'bg-gradient-to-r from-purple-400 to-pink-400'
+                  : 'bg-gradient-to-r from-blue-600 to-green-600'
+              }`}>
+                Excel in Your Exams
+              </span>
             </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto font-light">
+            <p className={`text-lg max-w-2xl mx-auto font-light ${
+              isDark ? 'text-gray-300' : 'text-gray-600'
+            }`}>
               Advanced AI technology that analyzes patterns across thousands of exam papers
             </p>
           </div>
@@ -339,30 +428,66 @@ export default function LandingPage() {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -4 }}
-                className={`group relative p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30 cursor-pointer ${
-                  activeFeature === index ? 'ring-2 ring-purple-500/50 shadow-[0_0_50px_rgba(168,85,247,0.3)]' : ''
+                className={`group relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer ${
+                  isDark
+                    ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/30'
+                    : 'bg-white border-gray-200 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-200/50'
+                } ${
+                  activeFeature === index 
+                    ? isDark
+                      ? 'ring-2 ring-purple-500/50 shadow-[0_0_50px_rgba(168,85,247,0.3)]'
+                      : 'ring-2 ring-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.3)]'
+                    : ''
                 }`}
                 onMouseEnter={() => setActiveFeature(index)}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/0 to-pink-600/0 group-hover:from-purple-600/10 group-hover:to-pink-600/10 rounded-2xl transition-all duration-300"></div>
+                <div className={`absolute inset-0 rounded-2xl transition-all duration-300 ${
+                  isDark
+                    ? 'bg-gradient-to-br from-purple-600/0 to-pink-600/0 group-hover:from-purple-600/10 group-hover:to-pink-600/10'
+                    : 'bg-gradient-to-br from-blue-600/0 to-green-600/0 group-hover:from-blue-600/5 group-hover:to-green-600/5'
+                }`}></div>
                 
                 <div className="relative z-10">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-2xl">
+                  <div className={`w-16 h-16 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-2xl ${
+                    isDark
+                      ? 'bg-gradient-to-br from-purple-600 to-pink-600'
+                      : 'bg-gradient-to-br from-blue-600 to-green-600'
+                  }`}>
                     <feature.icon className="w-8 h-8 text-white" strokeWidth={2.5} />
                   </div>
 
-                  <h3 className="text-xl font-black text-white mb-3 group-hover:text-purple-300 transition-colors duration-300">
+                  <h3 className={`text-xl font-black mb-3 transition-colors duration-300 ${
+                    isDark
+                      ? 'text-white group-hover:text-purple-300'
+                      : 'text-gray-900 group-hover:text-blue-600'
+                  }`}>
                     {feature.title}
                   </h3>
-                  <p className="text-gray-400 leading-relaxed mb-6 text-sm group-hover:text-gray-300 transition-colors duration-300">
+                  <p className={`leading-relaxed mb-6 text-sm transition-colors duration-300 ${
+                    isDark
+                      ? 'text-gray-400 group-hover:text-gray-300'
+                      : 'text-gray-600 group-hover:text-gray-700'
+                  }`}>
                     {feature.description}
                   </p>
 
-                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 backdrop-blur-sm">
-                    <span className="text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-sm ${
+                    isDark
+                      ? 'bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-500/30'
+                      : 'bg-gradient-to-br from-blue-50 to-green-50 border-blue-200'
+                  }`}>
+                    <span className={`text-4xl font-black bg-clip-text text-transparent ${
+                      isDark
+                        ? 'bg-gradient-to-r from-purple-400 to-pink-400'
+                        : 'bg-gradient-to-r from-blue-600 to-green-600'
+                    }`}>
                       {feature.stat}
                     </span>
-                    <span className="text-sm font-bold text-gray-300 uppercase tracking-wide">{feature.statLabel}</span>
+                    <span className={`text-sm font-bold uppercase tracking-wide ${
+                      isDark ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      {feature.statLabel}
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -375,10 +500,12 @@ export default function LandingPage() {
       <section className="relative z-10 py-16 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+            <h2 className={`text-4xl md:text-5xl font-black mb-4 ${
+              isDark ? 'text-white' : 'text-gray-900'
+            }`}>
               The Difference is Clear
             </h2>
-            <p className="text-lg text-gray-300 font-light">
+            <p className={`text-lg font-light ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               See how ExamPulse transforms your study experience
             </p>
           </div>
@@ -390,15 +517,23 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6 }}
-              className="p-8 rounded-2xl bg-gradient-to-br from-red-500/10 to-red-600/5 border-2 border-red-500/30 backdrop-blur-xl"
+              className={`p-8 rounded-2xl border-2 backdrop-blur-xl ${
+                isDark
+                  ? 'bg-gradient-to-br from-red-500/10 to-red-600/5 border-red-500/30'
+                  : 'bg-gradient-to-br from-red-50 to-red-100/50 border-red-300'
+              }`}
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
-                  <svg className="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                  isDark ? 'bg-red-500/20' : 'bg-red-200'
+                }`}>
+                  <svg className={`w-7 h-7 ${isDark ? 'text-red-400' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-black text-white">Before ExamPulse</h3>
+                <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  Before ExamPulse
+                </h3>
               </div>
               
               <div className="space-y-4">
@@ -409,12 +544,16 @@ export default function LandingPage() {
                   "Studying everything equally"
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center mt-0.5">
-                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
+                    <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 ${
+                      isDark ? 'bg-red-500/20' : 'bg-red-200'
+                    }`}>
+                      <svg className={`w-4 h-4 ${isDark ? 'text-red-400' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-base leading-relaxed">{item}</span>
+                    <span className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {item}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -426,18 +565,28 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6 }}
-              className="p-8 rounded-2xl bg-gradient-to-br from-green-500/10 to-emerald-600/5 border-2 border-green-500/30 backdrop-blur-xl relative overflow-hidden"
+              className={`p-8 rounded-2xl border-2 backdrop-blur-xl relative overflow-hidden ${
+                isDark
+                  ? 'bg-gradient-to-br from-green-500/10 to-emerald-600/5 border-green-500/30'
+                  : 'bg-gradient-to-br from-green-50 to-emerald-100/50 border-green-300'
+              }`}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-3xl"></div>
+              <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl ${
+                isDark ? 'bg-green-500/10' : 'bg-green-200/50'
+              }`}></div>
               
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
-                    <svg className="w-7 h-7 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                    isDark ? 'bg-green-500/20' : 'bg-green-200'
+                  }`}>
+                    <svg className={`w-7 h-7 ${isDark ? 'text-green-400' : 'text-green-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-black text-white">After ExamPulse</h3>
+                  <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    After ExamPulse
+                  </h3>
                 </div>
                 
                 <div className="space-y-4">
@@ -448,12 +597,18 @@ export default function LandingPage() {
                     "Better marks with less studying"
                   ].map((item, index) => (
                     <div key={index} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center mt-0.5">
-                        <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
+                      <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 ${
+                        isDark ? 'bg-green-500/20' : 'bg-green-200'
+                      }`}>
+                        <svg className={`w-4 h-4 ${isDark ? 'text-green-400' : 'text-green-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <span className="text-gray-100 text-base leading-relaxed font-medium">{item}</span>
+                      <span className={`text-base leading-relaxed font-medium ${
+                        isDark ? 'text-gray-100' : 'text-gray-800'
+                      }`}>
+                        {item}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -467,10 +622,12 @@ export default function LandingPage() {
       <section id="how-it-works" className="relative z-10 py-16 px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+            <h2 className={`text-4xl md:text-5xl font-black mb-4 ${
+              isDark ? 'text-white' : 'text-gray-900'
+            }`}>
               Simple. Fast. Effective.
             </h2>
-            <p className="text-lg text-gray-300 font-light">
+            <p className={`text-lg font-light ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               Get started in minutes, see results in days
             </p>
           </div>
@@ -486,16 +643,32 @@ export default function LandingPage() {
               return (
                 <div key={index} className="flex gap-6 items-start group">
                   <div className="flex-shrink-0">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <div className={`w-16 h-16 rounded-xl flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 ${
+                      isDark
+                        ? 'bg-gradient-to-br from-purple-600 to-pink-600'
+                        : 'bg-gradient-to-br from-blue-600 to-green-600'
+                    }`}>
                       <IconComponent className="w-8 h-8 text-white" strokeWidth={2} />
                     </div>
                   </div>
                   <div className="flex-1 pt-1">
-                    <div className="text-xs font-bold text-purple-400 mb-1.5">{step.num}</div>
-                    <h3 className="text-2xl font-black text-white mb-2 group-hover:text-purple-300 transition-colors duration-300">
+                    <div className={`text-xs font-bold mb-1.5 ${
+                      isDark ? 'text-purple-400' : 'text-blue-600'
+                    }`}>
+                      {step.num}
+                    </div>
+                    <h3 className={`text-2xl font-black mb-2 transition-colors duration-300 ${
+                      isDark
+                        ? 'text-white group-hover:text-purple-300'
+                        : 'text-gray-900 group-hover:text-blue-600'
+                    }`}>
                       {step.title}
                     </h3>
-                    <p className="text-base text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+                    <p className={`text-base transition-colors duration-300 ${
+                      isDark
+                        ? 'text-gray-400 group-hover:text-gray-300'
+                        : 'text-gray-600 group-hover:text-gray-700'
+                    }`}>
                       {step.desc}
                     </p>
                   </div>
@@ -515,16 +688,32 @@ export default function LandingPage() {
             animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-block px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 mb-4">
-              <span className="text-sm font-semibold text-purple-300 uppercase tracking-wide">Testimonials</span>
+            <div className={`inline-block px-4 py-2 rounded-full border mb-4 ${
+              isDark
+                ? 'bg-purple-500/10 border-purple-500/30'
+                : 'bg-blue-50 border-blue-200'
+            }`}>
+              <span className={`text-sm font-semibold uppercase tracking-wide ${
+                isDark ? 'text-purple-300' : 'text-blue-700'
+              }`}>
+                Testimonials
+              </span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+            <h2 className={`text-4xl md:text-5xl font-black mb-4 ${
+              isDark ? 'text-white' : 'text-gray-900'
+            }`}>
               Loved by Students
-              <span className="block bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className={`block bg-clip-text text-transparent ${
+                isDark
+                  ? 'bg-gradient-to-r from-purple-400 to-pink-400'
+                  : 'bg-gradient-to-r from-blue-600 to-green-600'
+              }`}>
                 Worldwide
               </span>
             </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto font-light">
+            <p className={`text-lg max-w-2xl mx-auto font-light ${
+              isDark ? 'text-gray-300' : 'text-gray-600'
+            }`}>
               Join thousands who aced their exams with ExamPulse
             </p>
           </motion.div>
@@ -564,10 +753,16 @@ export default function LandingPage() {
                   animate={statsInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <div className="text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                  <div className={`text-4xl font-black bg-clip-text text-transparent mb-2 ${
+                    isDark
+                      ? 'bg-gradient-to-r from-purple-400 to-pink-400'
+                      : 'bg-gradient-to-r from-blue-600 to-green-600'
+                  }`}>
                     {count}
                   </div>
-                  <div className="text-sm text-gray-500 font-medium">
+                  <div className={`text-sm font-medium ${
+                    isDark ? 'text-gray-500' : 'text-gray-600'
+                  }`}>
                     {stat.label}
                   </div>
                 </motion.div>
@@ -582,12 +777,24 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto">
           <div className="relative">
             {/* Subtle glow background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-purple-600/20 rounded-3xl blur-3xl"></div>
+            <div className={`absolute inset-0 rounded-3xl blur-3xl ${
+              isDark
+                ? 'bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-purple-600/20'
+                : 'bg-gradient-to-r from-blue-200/40 via-green-200/40 to-blue-200/40'
+            }`}></div>
             
             {/* Main card */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border border-white/10">
+            <div className={`relative overflow-hidden rounded-3xl backdrop-blur-xl border ${
+              isDark
+                ? 'bg-gradient-to-br from-white/[0.07] to-white/[0.02] border-white/10'
+                : 'bg-white border-gray-200 shadow-xl'
+            }`}>
               {/* Subtle decorative gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5"></div>
+              <div className={`absolute inset-0 ${
+                isDark
+                  ? 'bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5'
+                  : 'bg-gradient-to-br from-blue-50/50 via-transparent to-green-50/50'
+              }`}></div>
               
               <div className="relative z-10 px-8 py-16 md:px-12 md:py-20 text-center">
                 {/* Urgency Badge */}
@@ -596,29 +803,47 @@ export default function LandingPage() {
                   whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.3 }}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 mb-8"
+                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-8 ${
+                    isDark
+                      ? 'bg-red-500/10 border-red-500/20'
+                      : 'bg-red-50 border-red-200'
+                  }`}
                 >
                   <div className="relative flex items-center justify-center">
                     <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping absolute"></div>
                     <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
                   </div>
-                  <span className="text-[11px] font-bold text-red-400 uppercase tracking-wider">Time Sensitive</span>
+                  <span className={`text-[11px] font-bold uppercase tracking-wider ${
+                    isDark ? 'text-red-400' : 'text-red-600'
+                  }`}>
+                    Time Sensitive
+                  </span>
                 </motion.div>
 
                 {/* Headline */}
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-5 leading-[1.1] tracking-tight">
+                <h2 className={`text-4xl md:text-5xl lg:text-6xl font-black mb-5 leading-[1.1] tracking-tight ${
+                  isDark ? 'text-white' : 'text-gray-900'
+                }`}>
                   Your Next Exam Is Closer
-                  <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mt-2">
+                  <span className={`block mt-2 bg-clip-text text-transparent ${
+                    isDark
+                      ? 'bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400'
+                      : 'bg-gradient-to-r from-blue-600 via-green-600 to-blue-600'
+                  }`}>
                     Than You Think
                   </span>
                 </h2>
                 
                 {/* Subheadline */}
-                <p className="text-lg md:text-xl font-semibold text-white/80 mb-3 tracking-tight">
+                <p className={`text-lg md:text-xl font-semibold mb-3 tracking-tight ${
+                  isDark ? 'text-white/80' : 'text-gray-800'
+                }`}>
                   Start Preparing Smarter.
                 </p>
                 
-                <p className="text-base text-gray-400 mb-10 max-w-xl mx-auto font-light leading-relaxed">
+                <p className={`text-base mb-10 max-w-xl mx-auto font-light leading-relaxed ${
+                  isDark ? 'text-gray-400' : 'text-gray-600'
+                }`}>
                   Join 1,000+ students who stopped guessing and started winning
                 </p>
 
@@ -626,7 +851,11 @@ export default function LandingPage() {
                 <div className="flex flex-col items-center gap-3">
                   <Link
                     to="/home"
-                    className="group inline-flex items-center gap-2.5 px-8 py-4 bg-white hover:bg-gray-50 text-black rounded-2xl font-bold text-base hover:scale-[1.02] transform transition-all duration-200 shadow-xl shadow-black/20"
+                    className={`group inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-base hover:scale-[1.02] transform transition-all duration-200 shadow-xl ${
+                      isDark
+                        ? 'bg-white hover:bg-gray-50 text-black shadow-black/20'
+                        : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 text-white shadow-blue-500/30'
+                    }`}
                   >
                     Get Started Now
                     <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
@@ -635,7 +864,9 @@ export default function LandingPage() {
                   </Link>
                   
                   {/* Trust indicator */}
-                  <div className="flex items-center gap-1.5 text-[13px] text-gray-500">
+                  <div className={`flex items-center gap-1.5 text-[13px] ${
+                    isDark ? 'text-gray-500' : 'text-gray-600'
+                  }`}>
                     <svg className="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
@@ -654,38 +885,48 @@ export default function LandingPage() {
           {/* Logo and tagline */}
           <div className="flex flex-col items-center text-center mb-10">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
+                isDark
+                  ? 'bg-gradient-to-br from-purple-500 to-pink-500 shadow-purple-500/30'
+                  : 'bg-gradient-to-br from-blue-600 to-green-600 shadow-blue-500/30'
+              }`}>
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <span className="text-xl font-black text-white">ExamPulse</span>
+              <span className={`text-xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                ExamPulse
+              </span>
             </div>
-            <p className="text-sm text-gray-500 max-w-md">
+            <p className={`text-sm max-w-md ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>
               AI-powered exam preparation platform helping students ace their exams
             </p>
           </div>
 
           {/* Copyright */}
           <div className="text-center mb-6">
-            <p className="text-sm text-gray-500">
+            <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>
               © 2025 ExamPulse. All rights reserved.
             </p>
           </div>
 
           {/* Hackathon credit */}
           <div className="flex flex-col items-center gap-3">
-            <p className="text-xs text-gray-600 font-medium">
+            <p className={`text-xs font-medium ${isDark ? 'text-gray-600' : 'text-gray-500'}`}>
               Developed during the HEC Generative AI Training Hackathon by:
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
               {['Haroon', 'Azmeer', 'Saria', 'Soban', 'Basima', 'Mubashar'].map((name, index, array) => (
                 <React.Fragment key={name}>
-                  <span className="text-gray-400 hover:text-purple-400 transition-colors duration-200 font-medium">
+                  <span className={`font-medium transition-colors duration-200 ${
+                    isDark
+                      ? 'text-gray-400 hover:text-purple-400'
+                      : 'text-gray-600 hover:text-blue-600'
+                  }`}>
                     {name}
                   </span>
                   {index < array.length - 1 && (
-                    <span className="text-gray-700">·</span>
+                    <span className={isDark ? 'text-gray-700' : 'text-gray-400'}>·</span>
                   )}
                 </React.Fragment>
               ))}
