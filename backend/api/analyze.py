@@ -10,13 +10,17 @@ from collections import Counter
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from dotenv import load_dotenv
+import logging
 
-from core.ocr import run_ocr
+from core.ocr import run_ocr, run_best_ocr
 from core.question_extractor import extract_questions
 from core.ai_client import ai_client
 from utils.database import db
 
 load_dotenv()
+
+# Set up analysis logger
+analysis_logger = logging.getLogger("ExamPulse.Analysis")
 
 router = APIRouter()
 
@@ -59,18 +63,25 @@ async def analyze_paper(request: AnalyzeRequest) -> Dict:
         # Step 1: Run OCR
         # Convert to absolute path to avoid path issues
         absolute_path = str(file_path.resolve())
-        print(f"Running OCR on {absolute_path}...")
-        print(f"File exists: {os.path.exists(absolute_path)}")
-        ocr_text = run_ocr(absolute_path)
+        file_size = os.path.getsize(absolute_path)
+        
+        analysis_logger.info(f"[ANALYZE] Starting analysis for file_id: {request.file_id}")
+        analysis_logger.info(f"[ANALYZE] File: {file_path.name}, Size: {file_size:,} bytes")
+        
+        analysis_logger.info(f"[ANALYZE] Step 1: Running OCR...")
+        ocr_text = run_best_ocr(absolute_path)
         
         if not ocr_text:
+            analysis_logger.error(f"[ANALYZE] OCR failed for file_id: {request.file_id}")
             raise HTTPException(
                 status_code=500,
                 detail="OCR failed to extract text from file"
             )
         
+        analysis_logger.info(f"[ANALYZE] OCR successful: {len(ocr_text):,} characters extracted")
+        
         # Step 2: Extract questions
-        print("Extracting questions...")
+        analysis_logger.info(f"[ANALYZE] Step 2: Extracting questions...")
         raw_questions = extract_questions(ocr_text)
         
         if not raw_questions:
@@ -80,7 +91,7 @@ async def analyze_paper(request: AnalyzeRequest) -> Dict:
             )
         
         # Step 3: Classify questions using AI
-        print(f"Classifying {len(raw_questions)} questions with AI...")
+        analysis_logger.info(f"[ANALYZE] Step 3: Classifying {len(raw_questions)} questions with AI...")
         classified_questions = []
         
         for raw_q in raw_questions:
@@ -106,9 +117,20 @@ Question text:
                 response_format="json"
             )
             
-            # Check for errors
+            # Check for API key authentication errors first (fail fast)
+            if "error" in ai_response and ai_response.get("error_type") == "authentication_error":
+                raise HTTPException(
+                    status_code=401,
+                    detail=(
+                        "OpenRouter API key is invalid or expired. "
+                        "Please check your OPENROUTER_API_KEY in the .env file. "
+                        "Get a valid API key from https://openrouter.ai/keys"
+                    )
+                )
+            
+            # Check for other errors
             if "error" in ai_response:
-                print(f"Warning: AI classification failed for question {raw_q.get('question_number')}: {ai_response.get('error_message', 'Unknown error')}")
+                analysis_logger.warning(f"[ANALYZE] AI classification failed for Q{raw_q.get('question_number')}: {ai_response.get('error_message', 'Unknown error')}")
                 # Use defaults if AI fails
                 marks_value = raw_q.get('marks')
                 if marks_value is None:
@@ -168,6 +190,9 @@ Question text:
         
         # Sort by frequency (descending)
         topic_frequencies.sort(key=lambda x: x['frequency'], reverse=True)
+        
+        analysis_logger.info(f"[ANALYZE] ✓ Analysis complete: {total_questions} questions, {len(topic_frequencies)} topics")
+        analysis_logger.info(f"[ANALYZE] Top topics: {', '.join([t['topic'] for t in topic_frequencies[:3]])}")
         
         return {
             "message": "Analysis completed successfully",
