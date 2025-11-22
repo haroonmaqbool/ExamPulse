@@ -44,14 +44,14 @@ function ExpectedPaper() {
       {theme !== 'dark' && <Background />}
       <Navbar />
       
-      <main className="pt-20 relative z-10">
-        <div className="max-w-6xl mx-auto px-6 py-12">
+      <main className="pt-16 md:pt-20 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Header with title */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className={`text-5xl font-black bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 mb-8 ${
+            className={`text-3xl sm:text-4xl md:text-5xl font-black bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 mb-6 sm:mb-8 ${
               theme === 'dark'
                 ? 'from-purple-400 to-pink-400'
                 : 'from-blue-600 to-green-600'
@@ -123,19 +123,19 @@ function ExpectedPaper() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className={`rounded-2xl border p-8 transition-all duration-300 ${
+              className={`rounded-xl sm:rounded-2xl border p-4 sm:p-6 md:p-8 transition-all duration-300 ${
               theme === 'dark'
                 ? 'bg-white/5 border-white/10 backdrop-blur-xl'
                 : 'bg-white/80 border-blue-200 backdrop-blur-sm'
             }`}>
               <div className="mb-4">
-                <h2 className={`text-2xl font-black mb-2 transition-colors duration-300 ${
+                <h2 className={`text-xl sm:text-2xl font-black mb-2 transition-colors duration-300 ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}>
                   Expected Questions ({expectedPaper.total_questions || 0})
                 </h2>
                 {expectedPaper.based_on_topics && (
-                  <p className={`text-sm transition-colors duration-300 ${
+                  <p className={`text-xs sm:text-sm transition-colors duration-300 ${
                     theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                   }`}>
                     Based on topics: {expectedPaper.based_on_topics.join(', ')}

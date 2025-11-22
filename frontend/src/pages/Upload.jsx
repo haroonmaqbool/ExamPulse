@@ -149,14 +149,14 @@ function Upload() {
       {isDarkMode && <ShaderBackground />}
       {!isDarkMode && <Background />}
       <Navbar />
-      <main className="pt-20 relative z-10">
-        <div className="max-w-2xl mx-auto px-6 py-12">
+      <main className="pt-16 md:pt-20 relative z-10">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Page Title with Animation */}
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className={`text-5xl font-black mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
+            className={`text-3xl sm:text-4xl md:text-5xl font-black mb-6 sm:mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
               isDarkMode
                 ? 'from-purple-400 to-pink-400'
                 : 'from-blue-600 to-green-600'

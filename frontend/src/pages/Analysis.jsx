@@ -81,13 +81,13 @@ function Analysis() {
       {isDarkMode && <ShaderBackground />}
       {!isDarkMode && <Background />}
       <Navbar />
-      <main className="pt-20 relative z-10">
-        <div className="max-w-6xl mx-auto px-6 py-12">
+      <main className="pt-16 md:pt-20 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className={`text-5xl font-black mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
+            className={`text-3xl sm:text-4xl md:text-5xl font-black mb-6 sm:mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
             isDarkMode
               ? 'from-purple-400 to-pink-400'
               : 'from-blue-600 to-green-600'
@@ -143,12 +143,12 @@ function Analysis() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="space-y-3"
                 >
-                  <h2 className={`text-3xl font-black ${
+                  <h2 className={`text-2xl sm:text-3xl font-black ${
                     isDarkMode ? 'text-white' : 'text-gray-900'
                   }`}>
                     No Files to Analyze
                   </h2>
-                  <p className={`text-lg ${
+                  <p className={`text-base sm:text-lg ${
                     isDarkMode ? 'text-gray-400' : 'text-gray-600'
                   }`}>
                     Upload your exam papers to get started with AI-powered analysis
@@ -163,16 +163,16 @@ function Analysis() {
                 >
                   <button
                     onClick={() => navigate('/upload')}
-                    className={`group relative px-8 py-4 rounded-xl font-bold text-base text-white overflow-hidden transition-all duration-300 shadow-lg transform hover:scale-[1.02] active:scale-[0.98] ${
+                    className={`group relative px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base text-white overflow-hidden transition-all duration-300 shadow-lg transform hover:scale-[1.02] active:scale-[0.98] ${
                       isDarkMode
                         ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/30'
                         : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 shadow-blue-500/30'
                     }`}
                   >
                     <span className="relative flex items-center gap-2">
-                      <Upload className="w-5 h-5" />
+                      <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
                       Upload Files
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
                     </span>
                   </button>
                 </motion.div>
