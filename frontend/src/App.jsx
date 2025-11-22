@@ -9,7 +9,25 @@ import ExpectedPaper from './pages/ExpectedPaper'
 import StudyLogs from './pages/StudyLogs'
 import SmartPlan from './pages/SmartPlan'
 import LandingPage from './pages/LandingPage'
-import { ThemeProvider } from './components/ThemeContext'
+import { ThemeProvider, useTheme } from './components/ThemeContext'
+import Background from './components/Background'
+
+/**
+ * AppLayout provides the main structure for pages that need the Navbar.
+ * It adds top padding to the main content area to prevent it from being
+ * obscured by the fixed Navbar.
+ */
+const AppLayout = () => {
+  return (
+    <>
+      <Navbar />
+      {/* pt-20 corresponds to the navbar's h-20 height */}
+      <main className="pt-20">
+        <Outlet />
+      </main>
+    </>
+  );
+};
 
 /**
  * AppLayout provides the main structure for pages that need the Navbar.
@@ -29,6 +47,8 @@ const AppLayout = () => {
 };
 
 function AppContent() {
+  const { theme } = useTheme()
+  const isDarkMode = theme === 'dark'
   const [isChatOpen, setIsChatOpen] = useState(false)
   const location = useLocation()
 
@@ -40,12 +60,13 @@ function AppContent() {
   const showChatbot = location.pathname !== '/'
 
   return (
-    <div className="relative">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}`}>
+      <Background />
       <Routes>
         {/* Landing page - no navbar, no chatbot */}
         <Route path="/" element={<LandingPage />} />
 
-        {/* Main app routes - wrapped in AppLayout to include Navbar and content padding */}
+        {/* Main app routes - with navbar and chatbot */}
         <Route element={<AppLayout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/upload" element={<Upload />} />
@@ -60,7 +81,11 @@ function AppContent() {
       {showChatbot && (
         <button
           onClick={toggleChat}
-          className="fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 z-50 group"
+          className={`fixed bottom-6 right-6 p-4 rounded-full text-white shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 z-50 group ${
+            isDarkMode
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500'
+              : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500'
+          }`}
           aria-label="Toggle chatbot"
         >
           {isChatOpen ? (

@@ -1,0 +1,108 @@
+.markdown-content h3 {
+    @apply text-lg font-bold mb-2;
+  }
+
+  .markdown-content ul {
+    @apply list-disc list-inside mb-4;
+  }
+
+  .markdown-content li {
+    @apply mb-1;
+  }
+
+  .markdown-content strong {
+    @apply font-bold;
+  }
+
+  .markdown-content a {
+    @apply text-purple-400 hover:underline;
+  }
+
+  .markdown-content p {
+      @apply text-sm leading-relaxed;
+  }
+
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h4,
+  .markdown-content h5,
+  .markdown-content h6 {
+      @apply font-bold;
+  }
+
+  .markdown-content code {
+      @apply bg-gray-900 text-sm rounded px-1;
+  }
+
+  .markdown-content pre {
+      @apply bg-gray-900 p-2 rounded text-sm overflow-x-auto;
+  }
+
+  .markdown-content blockquote {
+      @apply border-l-4 border-gray-500 pl-4 italic;
+  }
+
+  .markdown-content table {
+      @apply w-full border-collapse border border-gray-600;
+  }
+
+  .markdown-content th,
+  .markdown-content td {
+      @apply border border-gray-600 p-2;
+  }
+
+  .markdown-content th {
+      @apply bg-gray-700;
+  }
+
+  /* Custom Scrollbar Styles */
+  .chatbot-scrollbar {
+    scrollbar-width: thin;
+  }
+
+  /* Dark Mode Scrollbar */
+  .chatbot-scrollbar-dark {
+    scrollbar-color: rgba(139, 92, 246, 0.5) rgba(31, 41, 55, 0.3);
+  }
+
+  .chatbot-scrollbar-dark::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .chatbot-scrollbar-dark::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.3);
+    border-radius: 10px;
+  }
+
+  .chatbot-scrollbar-dark::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.5);
+    border-radius: 10px;
+  }
+
+  .chatbot-scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.7);
+  }
+
+  /* Light Mode Scrollbar */
+  .chatbot-scrollbar-light {
+    scrollbar-color: rgba(59, 130, 246, 0.5) rgba(229, 231, 235, 0.5);
+  }
+
+  .chatbot-scrollbar-light::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .chatbot-scrollbar-light::-webkit-scrollbar-track {
+    background: rgba(229, 231, 235, 0.5);
+    border-radius: 10px;
+  }
+
+  .chatbot-scrollbar-light::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.5);
+    border-radius: 10px;
+  }
+
+  .chatbot-scrollbar-light::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.7);
+  }
+  

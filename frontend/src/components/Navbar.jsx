@@ -19,19 +19,25 @@ function Navbar() {
   ]
 
   return (
-    <header className={`fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b transition-colors duration-300 ${
-      isDarkMode 
-        ? 'bg-black/40 border-white/5' 
-        : 'bg-white/80 border-gray-200'
+    <header className={`fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b transition-colors duration-500 ${
+      isDarkMode
+        ? 'bg-[#0a0a0a]/80 border-white/5'
+        : 'bg-white/90 border-gray-300 shadow-sm'
     }`}>
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-8 h-20">
         {/* Brand with gradient */}
-        <Link 
-          to="/home" 
-          className="flex items-center gap-2 text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent hover:from-purple-300 hover:via-pink-300 hover:to-purple-400 transition-all duration-300"
+        <Link
+          to="/home"
+          className={`flex items-center gap-2 text-2xl font-bold transition-all duration-300 ${
+            isDarkMode
+              ? 'bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent hover:from-purple-300 hover:via-pink-300 hover:to-purple-400'
+              : 'bg-gradient-to-r from-blue-600 via-green-600 to-blue-700 bg-clip-text text-transparent hover:from-blue-500 hover:via-green-500 hover:to-blue-600'
+          }`}
         >
           ExamPulse
-          <span className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
+          <span className={`h-2 w-2 rounded-full animate-pulse ${
+            isDarkMode ? 'bg-purple-500' : 'bg-blue-600'
+          }`} />
         </Link>
 
         {/* Desktop Navigation */}
@@ -42,30 +48,32 @@ function Navbar() {
               to={link.path}
               className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg group ${
                 isActive(link.path)
-                  ? isDarkMode ? 'text-white' : 'text-gray-900'
-                  : isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'
+                  ? isDarkMode ? 'text-white' : 'text-blue-700 font-semibold'
+                  : isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-700 hover:text-blue-700'
               }`}
             >
               <span className="relative z-10">{link.label}</span>
               {isActive(link.path) ? (
-                <span className={`absolute inset-0 rounded-lg border ${
-                  isDarkMode 
-                    ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 border-purple-500/30' 
-                    : 'bg-gray-200 border-gray-300'
+                <span className={`absolute inset-0 rounded-lg border transition-colors duration-500 ${
+                  isDarkMode
+                    ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 border-purple-500/30'
+                    : 'bg-gradient-to-r from-blue-100 to-green-100 border-blue-300'
                 }`} />
               ) : (
                 <span className={`absolute inset-0 rounded-lg transition-colors duration-300 ${
-                  isDarkMode ? 'group-hover:bg-white/5' : 'group-hover:bg-gray-200/60'
+                  isDarkMode ? 'group-hover:bg-white/5' : 'group-hover:bg-blue-50'
                 }`} />
               )}
             </Link>
           ))}
           
           {/* Theme Toggle Button */}
-          <button 
+          <button
             onClick={toggleTheme}
-            className={`ml-4 relative w-14 h-7 flex items-center rounded-full cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-              isDarkMode ? 'bg-gray-700' : 'bg-gray-200'
+            className={`ml-4 relative w-14 h-7 flex items-center rounded-full cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-2 ${
+              isDarkMode
+                ? 'bg-gray-700 focus:ring-purple-500'
+                : 'bg-blue-200 focus:ring-blue-500'
             }`}
             aria-label="Toggle light and dark mode"
           >
@@ -91,9 +99,9 @@ function Navbar() {
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className={`md:hidden relative p-2 rounded-lg transition-all duration-300 ${
-            isDarkMode 
-              ? 'text-gray-400 hover:text-white hover:bg-white/5' 
-              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/60'
+            isDarkMode
+              ? 'text-gray-400 hover:text-white hover:bg-white/5'
+              : 'text-gray-700 hover:text-blue-700 hover:bg-blue-50'
           }`}
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
@@ -120,9 +128,9 @@ function Navbar() {
       <div className={`md:hidden border-t backdrop-blur-xl transition-all duration-300 ease-in-out ${
         isMenuOpen ? 'max-h-screen' : 'max-h-0 overflow-hidden'
       } ${
-        isDarkMode 
-          ? 'border-white/5 bg-black/80' 
-          : 'border-gray-200 bg-white/95'
+        isDarkMode
+          ? 'border-white/10 bg-black/80'
+          : 'border-gray-300 bg-white/95'
       }`}>
         {isMenuOpen && (
           <div className="max-w-7xl mx-auto px-6 py-4">
@@ -134,12 +142,12 @@ function Navbar() {
                   onClick={() => setIsMenuOpen(false)}
                   className={`px-4 py-3 text-base font-medium rounded-lg transition-all duration-300 ${
                     isActive(link.path)
-                      ? isDarkMode 
+                      ? isDarkMode
                         ? 'text-white bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30'
-                        : 'text-gray-900 bg-gray-200 border border-gray-300'
+                        : 'text-blue-700 bg-gradient-to-r from-blue-100 to-green-100 border border-blue-300 font-semibold'
                       : isDarkMode
                         ? 'text-gray-400 hover:text-white hover:bg-white/5'
-                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/60'
+                        : 'text-gray-700 hover:text-blue-700 hover:bg-blue-50'
                   }`}
                 >
                   {link.label}
