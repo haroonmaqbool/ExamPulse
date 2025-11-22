@@ -8,6 +8,8 @@ import { useTheme } from '../components/ThemeContext'
 import api from '../utils/api'
 import Navbar from '../components/Navbar'
 import Background from '../components/Background'
+import ShaderBackground from '../components/ShaderBackground'
+import { motion } from 'framer-motion'
 
 function StudyLogs() {
   const [formData, setFormData] = useState({
@@ -58,25 +60,35 @@ function StudyLogs() {
   return (
     <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${
       isDarkMode
-        ? 'bg-[#0a0a0a]'
+        ? ''
         : 'bg-gradient-to-br from-blue-50 via-white to-green-50'
     }`}>
-      <Background />
+      {isDarkMode && <ShaderBackground />}
+      {!isDarkMode && <Background />}
       <Navbar />
       <main className="pt-20 relative z-10">
         <div className="max-w-2xl mx-auto px-6 py-12">
-          <h1 className={`text-4xl font-bold mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className={`text-5xl font-black mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
             isDarkMode
               ? 'from-purple-400 to-pink-400'
               : 'from-blue-600 to-green-600'
           }`}>
             Study Logs
-          </h1>
+          </motion.h1>
           
-          <form onSubmit={handleSubmit} className={`rounded-2xl border p-8 space-y-6 transition-all duration-300 ${
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            onSubmit={handleSubmit} 
+            className={`rounded-2xl border p-8 space-y-6 transition-all duration-300 ${
             isDarkMode
-              ? 'bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border-white/10'
-              : 'bg-white border-2 border-blue-200'
+              ? 'bg-white/5 border-white/10 backdrop-blur-xl'
+              : 'bg-white/80 border-blue-200 backdrop-blur-sm'
           }`}>
             <div>
               <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${
@@ -191,23 +203,25 @@ function StudyLogs() {
               />
             </div>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={submitting}
-              className={`relative w-full px-6 py-4 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100`}
-            >
-              <span className={`absolute inset-0 bg-gradient-to-r transition-all duration-300 ${
+              className={`relative w-full px-6 py-4 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${
                 isDarkMode
-                  ? 'from-purple-600 to-pink-600'
-                  : 'from-blue-600 to-green-600'
-              }`} />
-              <span className="relative">
-                {submitting ? 'Submitting...' : 'Create Study Log'}
-              </span>
-            </button>
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/30'
+                  : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 shadow-blue-500/30'
+              }`}
+            >
+              {submitting ? 'Submitting...' : 'Create Study Log'}
+            </motion.button>
 
             {submitStatus && (
-              <div
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
                 className={`p-4 rounded-xl border transition-all duration-300 ${
                   submitStatus.success
                     ? isDarkMode
@@ -219,9 +233,9 @@ function StudyLogs() {
                 }`}
               >
                 {submitStatus.message}
-              </div>
+              </motion.div>
             )}
-          </form>
+          </motion.form>
         </div>
       </main>
     </div>

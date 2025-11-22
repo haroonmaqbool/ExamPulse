@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import api from '../utils/api'
 import Navbar from '../components/Navbar'
 import Background from '../components/Background'
+import ShaderBackground from '../components/ShaderBackground'
 
 function Upload() {
   const [uploading, setUploading] = useState(false)
@@ -63,10 +64,11 @@ function Upload() {
   return (
     <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${
       isDarkMode
-        ? 'bg-[#0a0a0a]'
+        ? ''
         : 'bg-gradient-to-br from-blue-50 via-white to-green-50'
     }`}>
-      <Background />
+      {isDarkMode && <ShaderBackground />}
+      {!isDarkMode && <Background />}
       <Navbar />
       <main className="pt-20 relative z-10">
         <div className="max-w-2xl mx-auto px-6 py-12">
@@ -75,7 +77,7 @@ function Upload() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className={`text-4xl font-bold mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 ${
+            className={`text-5xl font-black mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
               isDarkMode
                 ? 'from-purple-400 to-pink-400'
                 : 'from-blue-600 to-green-600'
@@ -103,7 +105,7 @@ function Upload() {
             >
               <div className="flex items-center justify-center gap-3">
                 <div className={`h-5 w-5 border-2 border-t-transparent rounded-full animate-spin ${
-                  isDarkMode ? 'border-purple-500' : 'border-blue-500'
+                  isDarkMode ? 'border-purple-500' : 'border-blue-600'
                 }`}></div>
                 <span className={`font-medium transition-colors duration-300 ${
                   isDarkMode ? 'text-gray-300' : 'text-gray-700'
@@ -189,26 +191,23 @@ function Upload() {
               transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
               className="mt-8 flex justify-center"
             >
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={handleAnalyze}
-                className={`group relative px-8 py-4 rounded-xl font-bold text-base text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] shadow-lg transform ${
+                className={`group relative px-8 py-4 rounded-xl font-bold text-base text-white overflow-hidden transition-all duration-300 shadow-lg ${
                   isDarkMode
-                    ? 'shadow-purple-500/30 hover:shadow-purple-500/50'
-                    : 'shadow-blue-500/30 hover:shadow-blue-500/50'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/30'
+                    : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 shadow-blue-500/30'
                 }`}
               >
-                <span className={`absolute inset-0 bg-gradient-to-r transition-all duration-300 ${
-                  isDarkMode
-                    ? 'from-purple-600 to-pink-600 group-hover:from-purple-500 group-hover:to-pink-500'
-                    : 'from-blue-600 to-green-600 group-hover:from-blue-500 group-hover:to-green-500'
-                }`} />
                 <span className="relative flex items-center gap-2">
                   Analyze This File
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </span>
-              </button>
+              </motion.button>
             </motion.div>
           )}
 
