@@ -58,7 +58,7 @@ function Analysis() {
       <Navbar />
       <main className="pt-20 relative z-10">
         <div className="max-w-6xl mx-auto px-6 py-12">
-          <h1 className={`text-4xl font-bold mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 ${
+          <h1 className={`text-4xl font-bold mb-8 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 py-2 ${
             isDarkMode
               ? 'from-purple-400 to-pink-400'
               : 'from-blue-600 to-green-600'
