@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Chatbot from './components/Chatbot'
 import Home from './pages/Home'
@@ -10,6 +10,23 @@ import StudyLogs from './pages/StudyLogs'
 import SmartPlan from './pages/SmartPlan'
 import LandingPage from './pages/LandingPage'
 import { ThemeProvider } from './components/ThemeContext'
+
+/**
+ * AppLayout provides the main structure for pages that need the Navbar.
+ * It adds top padding to the main content area to prevent it from being
+ * obscured by the fixed Navbar.
+ */
+const AppLayout = () => {
+  return (
+    <>
+      <Navbar />
+      {/* pt-20 corresponds to the navbar's h-20 height */}
+      <main className="pt-20">
+        <Outlet />
+      </main>
+    </>
+  );
+};
 
 function AppContent() {
   const [isChatOpen, setIsChatOpen] = useState(false)
@@ -23,18 +40,20 @@ function AppContent() {
   const showChatbot = location.pathname !== '/'
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="relative">
       <Routes>
         {/* Landing page - no navbar, no chatbot */}
         <Route path="/" element={<LandingPage />} />
 
-        {/* Main app routes - with navbar and chatbot */}
-        <Route path="/home" element={<><Navbar /><Home /></>} />
-        <Route path="/upload" element={<><Navbar /><Upload /></>} />
-        <Route path="/analysis" element={<><Navbar /><Analysis /></>} />
-        <Route path="/expected-paper" element={<><Navbar /><ExpectedPaper /></>} />
-        <Route path="/study-logs" element={<><Navbar /><StudyLogs /></>} />
-        <Route path="/smart-plan" element={<><Navbar /><SmartPlan /></>} />
+        {/* Main app routes - wrapped in AppLayout to include Navbar and content padding */}
+        <Route element={<AppLayout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/expected-paper" element={<ExpectedPaper />} />
+          <Route path="/study-logs" element={<StudyLogs />} />
+          <Route path="/smart-plan" element={<SmartPlan />} />
+        </Route>
       </Routes>
 
       {/* Floating Chatbot Button - only show on home and onwards */}
