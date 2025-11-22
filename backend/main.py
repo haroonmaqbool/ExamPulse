@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Initialize logging first
 from utils.logger import logger
 
-from api import upload, analyze, analyze_multi, combine_ocr, expected_paper, study_logs, smart_plan, health, chatbot
+from api import upload, analyze, analyze_multi, combine_ocr, expected_paper, study_logs, smart_plan, health, chatbot, dashboard
 
 app = FastAPI(
     title="ExamPulse API",
@@ -36,6 +36,7 @@ app.include_router(expected_paper.router, prefix="/expected-paper", tags=["expec
 app.include_router(study_logs.router, prefix="/study-logs", tags=["study-logs"])
 app.include_router(smart_plan.router, prefix="/smart-plan", tags=["smart-plan"])
 app.include_router(chatbot.router, prefix="/chatbot", tags=["chatbot"])
+app.include_router(dashboard.router, prefix="/dashboard", tags=["dashboard"])
 
 
 @app.get("/")
@@ -49,7 +50,7 @@ async def root():
 async def startup_event():
     """Log server startup"""
     logger.info("ExamPulse API server started successfully")
-    logger.info("Available endpoints: /upload, /analyze, /analyze/multi, /expected-paper, /study-logs, /smart-plan, /chatbot")
+    logger.info("Available endpoints: /upload, /analyze, /analyze/multi, /expected-paper, /study-logs, /smart-plan, /chatbot, /dashboard")
 
 
 @app.on_event("shutdown")

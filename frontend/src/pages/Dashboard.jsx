@@ -8,29 +8,48 @@ import { useState, useEffect } from 'react'
 import { useTheme } from '../components/ThemeContext'
 import Background from '../components/Background'
 import ShaderBackground from '../components/ShaderBackground'
-import { Upload, BarChart3, FileText, Brain, BookOpen, TrendingUp, Calendar, Zap, Clock } from 'lucide-react'
+import { Upload, BarChart3, FileText, Brain, BookOpen, TrendingUp, Calendar, Zap, Clock, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
+import api from '../utils/api'
 
 function Dashboard() {
   const [isVisible, setIsVisible] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const { theme } = useTheme()
   const isDarkMode = theme === 'dark'
 
-  // Mock data
-  const [dashboardData] = useState({
-    accuracyScore: 95,
-    predictedQuestions: 48,
-    daysUntilExam: 12,
-    studyProgress: 67,
-    totalPapersUploaded: 5,
-    topicsAnalyzed: 12,
-    studyStreak: 7,
-    lastActivity: '2 hours ago'
+  // Real data from API
+  const [dashboardData, setDashboardData] = useState({
+    accuracyScore: 0,
+    predictedQuestions: 0,
+    daysUntilExam: 30,
+    studyProgress: 0,
+    totalPapersUploaded: 0,
+    topicsAnalyzed: 0,
+    studyStreak: 0,
+    lastActivity: 'No activity yet'
   })
 
   useEffect(() => {
     setIsVisible(true)
+    fetchDashboardData()
   }, [])
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await api.get('/dashboard/')
+      setDashboardData(response.data)
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err)
+      setError('Failed to load dashboard data')
+      // Keep default values on error
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${
@@ -42,6 +61,26 @@ function Dashboard() {
       {!isDarkMode && <Background />}
 
       <main className="relative z-10 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        {loading && (
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="flex flex-col items-center gap-4">
+              <Loader2 className={`w-8 h-8 animate-spin ${isDarkMode ? 'text-white' : 'text-gray-900'}`} />
+              <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Loading dashboard...</p>
+            </div>
+          </div>
+        )}
+        
+        {error && !loading && (
+          <div className="max-w-7xl mx-auto mb-6">
+            <div className={`rounded-xl p-4 ${isDarkMode ? 'bg-red-900/20 border border-red-500/20' : 'bg-red-50 border border-red-200'}`}>
+              <p className={isDarkMode ? 'text-red-400' : 'text-red-600'}>
+                {error}. Please refresh the page.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {!loading && (
         <div className={`max-w-7xl mx-auto transition-all duration-700 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
@@ -282,7 +321,7 @@ function Dashboard() {
                 >
                   <Link
                     to="/study-logs"
-                    className={`group relative p-6 rounded-xl transition-all h-full flex flex-col ${
+                    className={`group relative p-6 rounded-xl transition-all h-full flex flex-col min-h-[240px] ${
                       isDarkMode
                         ? 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/30'
                         : 'bg-white/80 border border-cyan-200 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-200/50 backdrop-blur-sm'
@@ -483,6 +522,7 @@ function Dashboard() {
             </div>
           </motion.div>
         </div>
+        )}
       </main>
     </div>
   )

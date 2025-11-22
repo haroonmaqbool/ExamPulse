@@ -10,10 +10,10 @@ function FileUpload({ onFileSelect, inputRef }) {
   const isDarkMode = theme === 'dark'
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      onFileSelect(file)
-      // Reset input so same file can be selected again and multiple uploads are allowed
+    const files = Array.from(e.target.files || [])
+    if (files.length > 0) {
+      onFileSelect(files)
+      // Reset input so same files can be selected again
       if (e.target) {
         e.target.value = ''
       }
@@ -33,6 +33,7 @@ function FileUpload({ onFileSelect, inputRef }) {
         onChange={handleFileChange}
         className="hidden"
         id="file-upload"
+        multiple
       />
       <label
         htmlFor="file-upload"
@@ -72,7 +73,7 @@ function FileUpload({ onFileSelect, inputRef }) {
         <span className={`text-sm ${
           isDarkMode ? 'text-gray-400' : 'text-gray-700'
         }`}>
-          PDF, PNG, JPG (MAX. 10MB)
+          PDF, PNG, JPG (MAX. 10MB each) - Select multiple files
         </span>
       </label>
     </div>
