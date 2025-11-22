@@ -8,6 +8,8 @@ import Analysis from './pages/Analysis'
 import ExpectedPaper from './pages/ExpectedPaper'
 import StudyLogs from './pages/StudyLogs'
 import SmartPlan from './pages/SmartPlan'
+import LandingPage from './pages/LandingPage'
+import { ThemeProvider } from './components/ThemeContext'
 
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false)
@@ -17,11 +19,14 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
+    <ThemeProvider>
+      <Routes>
+        {/* Route for the landing page, which doesn't have the main Navbar */}
+        <Route path="/" element={<LandingPage />} />
+
+        {/* Nested routes for the main application, which all share the AppLayout */}
+        <Route element={<AppLayout />}>
+          <Route path="/home" element={<Home />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/expected-paper" element={<ExpectedPaper />} />
@@ -54,4 +59,3 @@ function App() {
 }
 
 export default App
-
