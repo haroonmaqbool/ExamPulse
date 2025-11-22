@@ -3,7 +3,12 @@
  * Handles file upload for past exam papers (PDF or images)
  */
 
+import { useTheme } from './ThemeContext'
+
 function FileUpload({ onFileSelect }) {
+  const { theme } = useTheme()
+  const isDarkMode = theme === 'dark'
+
   const handleFileChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -12,7 +17,11 @@ function FileUpload({ onFileSelect }) {
   }
 
   return (
-    <div className="relative border-2 border-dashed border-white/20 rounded-2xl p-12 text-center bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl hover:border-purple-500/50 transition-all duration-300 group">
+    <div className={`relative border-2 border-dashed rounded-2xl p-12 text-center backdrop-blur-xl transition-all duration-300 group ${
+      isDarkMode
+        ? 'border-white/20 bg-gradient-to-br from-white/5 to-white/[0.02] hover:border-purple-500/50'
+        : 'border-blue-400 bg-blue-50/40 hover:border-blue-500'
+    }`}>
       <input
         type="file"
         accept=".pdf,.png,.jpg,.jpeg"
@@ -25,9 +34,17 @@ function FileUpload({ onFileSelect }) {
         className="cursor-pointer flex flex-col items-center"
       >
         <div className="relative mb-6">
-          <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full scale-150 group-hover:scale-175 transition-transform duration-300"></div>
+          <div className={`absolute inset-0 blur-2xl rounded-full scale-150 group-hover:scale-175 transition-transform duration-300 ${
+            isDarkMode
+              ? 'bg-purple-500/20'
+              : 'bg-blue-400/20'
+          }`}></div>
           <svg
-            className="relative w-16 h-16 text-purple-400 group-hover:text-purple-300 transition-colors duration-300"
+            className={`relative w-16 h-16 transition-colors duration-300 ${
+              isDarkMode
+                ? 'text-purple-400 group-hover:text-purple-300'
+                : 'text-blue-500 group-hover:text-blue-600'
+            }`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -40,10 +57,16 @@ function FileUpload({ onFileSelect }) {
             />
           </svg>
         </div>
-        <span className="text-white font-semibold text-lg mb-2 group-hover:text-purple-300 transition-colors duration-300">
+        <span className={`font-semibold text-lg mb-2 transition-colors duration-300 ${
+          isDarkMode
+            ? 'text-white group-hover:text-purple-300'
+            : 'text-gray-900 group-hover:text-blue-600'
+        }`}>
           Click to upload or drag and drop
         </span>
-        <span className="text-gray-400 text-sm">
+        <span className={`text-sm ${
+          isDarkMode ? 'text-gray-400' : 'text-gray-700'
+        }`}>
           PDF, PNG, JPG (MAX. 10MB)
         </span>
       </label>

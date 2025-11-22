@@ -3,12 +3,14 @@
  * Displays generated expected exam paper (max 20 questions)
  */
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import axios from 'axios'
+import { useTheme } from '../components/ThemeContext' // import your theme context
 
 function ExpectedPaper() {
   const [expectedPaper, setExpectedPaper] = useState(null)
   const [loading, setLoading] = useState(false)
+  const { theme } = useTheme() // only need theme, toggle stays in navbar
 
   const generateExpectedPaper = async () => {
     setLoading(true)
@@ -26,26 +28,45 @@ function ExpectedPaper() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12">
+    <div className={`min-h-screen px-6 py-12 transition-colors duration-500 ${
+      theme === 'dark' ? 'bg-[#0a0a0a] text-white' : 'bg-white text-gray-900'
+    }`}>
+      
+      {/* Header with title */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+        <h1 className={`text-4xl font-bold ${
+          theme === 'dark'
+            ? 'bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent'
+            : 'text-gray-900'
+        }`}>
           Expected Paper
         </h1>
+
+        {/* Generate button */}
         <button
-          onClick={generateExpectedPaper}
-          disabled={loading}
-          className="relative px-6 py-3 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+            onClick={generateExpectedPaper}
+            disabled={loading}
+            className={`relative px-6 py-3 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 ${
+              theme === 'dark'
+                ? 'text-white'
+                : 'text-gray-900' // button text color in light mode
+            }`}
         >
-          <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600" />
-          <span className="relative">
-            {loading ? 'Generating...' : 'Generate Expected Paper'}
-          </span>
+            <span className={`absolute inset-0 ${
+              theme === 'dark'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600'
+                : 'bg-gradient-to-r from-blue-500 to-green-500' // light mode gradient
+            }`} />
+            <span className="relative">
+              {loading ? 'Generating...' : 'Generate Expected Paper'}
+            </span>
         </button>
       </div>
 
+      {/* Expected Paper Display */}
       {expectedPaper ? (
         <div className="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 p-8">
-          <h2 className="text-2xl font-bold text-white mb-4">
+          <h2 className="text-2xl font-bold mb-4">
             Expected Questions (Max 20)
           </h2>
           <p className="text-gray-400">
@@ -62,4 +83,3 @@ function ExpectedPaper() {
 }
 
 export default ExpectedPaper
-
