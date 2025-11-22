@@ -44,14 +44,22 @@ function ExpectedPaper() {
 
         {/* Generate button */}
         <button
-          onClick={generateExpectedPaper}
-          disabled={loading}
-          className="relative px-6 py-3 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+            onClick={generateExpectedPaper}
+            disabled={loading}
+            className={`relative px-6 py-3 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 ${
+              theme === 'dark'
+                ? 'text-white'
+                : 'text-gray-900' // button text color in light mode
+            }`}
         >
-          <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600" />
-          <span className="relative">
-            {loading ? 'Generating...' : 'Generate Expected Paper'}
-          </span>
+            <span className={`absolute inset-0 ${
+              theme === 'dark'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600'
+                : 'bg-gradient-to-r from-blue-500 to-green-500' // light mode gradient
+            }`} />
+            <span className="relative">
+              {loading ? 'Generating...' : 'Generate Expected Paper'}
+            </span>
         </button>
       </div>
 
