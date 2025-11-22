@@ -154,14 +154,16 @@ function StudyLogs() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowForm(!showForm)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg ${
+              className={`group flex items-center justify-between px-3 py-2 rounded-full transition-all duration-300 border shadow-sm ${
                 isDarkMode
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white shadow-purple-500/30'
-                  : 'bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 text-white shadow-blue-500/30'
+                  ? 'bg-white/5 hover:bg-white/10 border-white/10 text-gray-300'
+                  : 'bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-600'
               }`}
             >
-              {showForm ? <X className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-              {showForm ? 'Cancel' : 'New Log'}
+              <div className="flex items-center gap-2">
+                {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                <span className="font-medium">{showForm ? 'Cancel' : 'New Log'}</span>
+              </div>
             </motion.button>
           </div>
 
