@@ -15,12 +15,13 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['framer-motion'],
+    include: ['framer-motion', 'axios'],
     esbuildOptions: {
-      target: 'esnext'
+      target: 'es2020'
     }
   },
   build: {
+    target: 'es2020',
     chunkSizeWarningLimit: 1600,
     commonjsOptions: {
       include: [/node_modules/],

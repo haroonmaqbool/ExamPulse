@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import './styles/index.css'
-import { ThemeProvider } from './components/ThemeContext';
+import { ThemeProvider } from './components/ThemeContext'
 
 // Error boundary component
 class ErrorBoundary extends React.Component {
