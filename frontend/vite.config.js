@@ -15,8 +15,15 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
+    include: ['framer-motion'],
     esbuildOptions: {
       target: 'esnext'
+    }
+  },
+  build: {
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
     }
   },
   define: {
