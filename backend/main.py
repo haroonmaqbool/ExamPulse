@@ -3,8 +3,13 @@ ExamPulse Backend - FastAPI Main Application
 Entry point for the FastAPI server with CORS and route registration.
 """
 
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Initialize logging first
 from utils.logger import logger
@@ -17,10 +22,20 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS configuration
+# CORS configuration - supports both local and production
+
+# Get allowed origins from environment or use defaults
+allowed_origins = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:5173,http://localhost:3000,https://exampulse.vercel.app"
+).split(",")
+
+# Remove empty strings and strip whitespace
+allowed_origins = [origin.strip() for origin in allowed_origins if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Vite default port
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
