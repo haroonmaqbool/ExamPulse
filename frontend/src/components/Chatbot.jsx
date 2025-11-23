@@ -56,7 +56,9 @@ const Chatbot = ({ isChatOpen, toggleChat }) => {
       const timeoutId = setTimeout(() => controller.abort(), 60000) // 60 second timeout
 
       // Use API_BASE_URL from environment variable or proxy
-      const chatbotUrl = `${API_BASE_URL}/chatbot/`
+      // Fix double slash issue: remove trailing slash from base URL if present
+      const baseUrl = API_BASE_URL.replace(/\/$/, '') // Remove trailing slash
+      const chatbotUrl = `${baseUrl}/chatbot/`
       
       const response = await fetch(chatbotUrl, {
         method: 'POST',
