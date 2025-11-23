@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Chatbot from './components/Chatbot'
-import { ThemeProvider, useTheme } from './components/ThemeContext'
+import { useTheme } from './components/ThemeContext'
 import Background from './components/Background'
 import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
@@ -94,11 +94,7 @@ function AppContent() {
 }
 
 function App() {
-  return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
-  )
+  return <AppContent />
 }
 
 export default App

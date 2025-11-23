@@ -35,7 +35,8 @@ class ErrorBoundary extends React.Component {
           color: '#fff'
         }}>
           <h1 style={{ fontSize: '24px', marginBottom: '16px' }}>Something went wrong</h1>
-          <p style={{ marginBottom: '24px', color: '#999' }}>Please refresh the page</p>
+          <p style={{ marginBottom: '8px', color: '#999' }}>{this.state.error?.message || 'Unknown error'}</p>
+          <p style={{ marginBottom: '24px', color: '#666', fontSize: '12px' }}>Check console for details</p>
           <button 
             onClick={() => window.location.reload()}
             style={{
@@ -57,17 +58,34 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const rootElement = document.getElementById('root');
 
-root.render(
-  <React.StrictMode>
-    <ErrorBoundary>
-      <BrowserRouter>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </BrowserRouter>
-    </ErrorBoundary>
-  </React.StrictMode>
-)
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
+
+const root = ReactDOM.createRoot(rootElement);
+
+try {
+  root.render(
+    <React.StrictMode>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </React.StrictMode>
+  );
+} catch (error) {
+  console.error('Failed to render app:', error);
+  rootElement.innerHTML = `
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; padding: 20px; text-align: center; background: #0a0a0a; color: #fff;">
+      <h1 style="font-size: 24px; margin-bottom: 16px;">Failed to load app</h1>
+      <p style="margin-bottom: 24px; color: #999;">${error.message}</p>
+      <button onclick="window.location.reload()" style="padding: 12px 24px; background: #7c3aed; color: white; border: none; border-radius: 8px; cursor: pointer;">Refresh Page</button>
+    </div>
+  `;
+}
 
