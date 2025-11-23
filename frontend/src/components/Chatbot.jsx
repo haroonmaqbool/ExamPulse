@@ -4,6 +4,9 @@ import remarkGfm from 'remark-gfm'
 import { useTheme } from './ThemeContext'
 import '../styles/markdown.css'
 
+// Get API URL from environment variable or use proxy for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+
 const Chatbot = ({ isChatOpen, toggleChat }) => {
   const { theme } = useTheme()
   const isDarkMode = theme === 'dark'
@@ -52,7 +55,10 @@ const Chatbot = ({ isChatOpen, toggleChat }) => {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 60000) // 60 second timeout
 
-      const response = await fetch('http://localhost:8000/chatbot/', {
+      // Use API_BASE_URL from environment variable or proxy
+      const chatbotUrl = `${API_BASE_URL}/chatbot/`
+      
+      const response = await fetch(chatbotUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +100,7 @@ const Chatbot = ({ isChatOpen, toggleChat }) => {
       if (error.name === 'AbortError') {
         errorMessage.text = 'The request took too long. The AI service might be slow. Please try again with a shorter question.'
       } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-        errorMessage.text = 'Cannot connect to the server. Please make sure the backend server is running on http://localhost:8000'
+        errorMessage.text = 'Cannot connect to the server. Please check your internet connection and try again.'
       } else if (error.message.includes('Server error')) {
         errorMessage.text = 'Server error occurred. Please check the backend logs and try again.'
       } else {
