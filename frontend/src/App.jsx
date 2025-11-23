@@ -1,25 +1,16 @@
-import { useState, lazy, Suspense } from 'react'
+import { useState } from 'react'
 import { Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Chatbot from './components/Chatbot'
 import { ThemeProvider, useTheme } from './components/ThemeContext'
 import Background from './components/Background'
-
-// Lazy load pages for code splitting
-const LandingPage = lazy(() => import('./pages/LandingPage'))
-const Dashboard = lazy(() => import('./pages/Dashboard'))
-const Upload = lazy(() => import('./pages/Upload'))
-const Analysis = lazy(() => import('./pages/Analysis'))
-const ExpectedPaper = lazy(() => import('./pages/ExpectedPaper'))
-const StudyLogs = lazy(() => import('./pages/StudyLogs'))
-const SmartPlan = lazy(() => import('./pages/SmartPlan'))
-
-// Loading component
-const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-  </div>
-)
+import LandingPage from './pages/LandingPage'
+import Dashboard from './pages/Dashboard'
+import Upload from './pages/Upload'
+import Analysis from './pages/Analysis'
+import ExpectedPaper from './pages/ExpectedPaper'
+import StudyLogs from './pages/StudyLogs'
+import SmartPlan from './pages/SmartPlan'
 
 /**
  * AppLayout provides the main structure for pages that need the Navbar.
@@ -56,22 +47,20 @@ function AppContent() {
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}`}>
       <Background />
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          {/* Landing page - no navbar, no chatbot */}
-          <Route path="/" element={<LandingPage />} />
+      <Routes>
+        {/* Landing page - no navbar, no chatbot */}
+        <Route path="/" element={<LandingPage />} />
 
-          {/* Main app routes - with navbar and chatbot */}
-          <Route element={<AppLayout />}>
-            <Route path="/home" element={<Dashboard />} />
-            <Route path="/upload" element={<Upload />} />
-            <Route path="/analysis" element={<Analysis />} />
-            <Route path="/expected-paper" element={<ExpectedPaper />} />
-            <Route path="/study-logs" element={<StudyLogs />} />
-            <Route path="/smart-plan" element={<SmartPlan />} />
-          </Route>
-        </Routes>
-      </Suspense>
+        {/* Main app routes - with navbar and chatbot */}
+        <Route element={<AppLayout />}>
+          <Route path="/home" element={<Dashboard />} />
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/expected-paper" element={<ExpectedPaper />} />
+          <Route path="/study-logs" element={<StudyLogs />} />
+          <Route path="/smart-plan" element={<SmartPlan />} />
+        </Route>
+      </Routes>
 
       {/* Floating Chatbot Button - Adjusted to sit nicely with sidebar */}
       {showChatbot && (
