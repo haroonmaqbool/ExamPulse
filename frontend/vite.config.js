@@ -21,9 +21,19 @@ export default defineConfig({
     }
   },
   build: {
+    chunkSizeWarningLimit: 1600,
     commonjsOptions: {
       include: [/node_modules/],
       transformMixedEsModules: true
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['framer-motion', 'lucide-react'],
+          'chart-vendor': ['recharts']
+        }
+      }
     }
   },
   define: {
