@@ -15,7 +15,7 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['framer-motion', 'axios'],
+    include: ['framer-motion', 'axios', 'react-markdown', 'remark-gfm'],
     esbuildOptions: {
       target: 'es2020'
     }
