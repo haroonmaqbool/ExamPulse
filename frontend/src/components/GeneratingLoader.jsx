@@ -18,7 +18,7 @@ export default function GeneratingLoader({ text = "Generating", size = 180 }) {
         {letters.map((letter, index) => (
           <span
             key={index}
-            className="inline-block text-white dark:text-gray-800 opacity-40 animate-loaderLetter"
+            className="inline-block bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent opacity-40 animate-loaderLetter"
             style={{ 
               animationDelay: `${index * 0.1}s`,
               animation: 'loaderLetter 3s infinite'
