@@ -5,13 +5,16 @@
 
 import axios from 'axios'
 
+// Get API URL from environment variable or use proxy for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: '/api', // Will be proxied to http://localhost:8000 by Vite
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 120000, // 2 minutes for AI operations
+  timeout: 600000, // 10 minutes for analysis operations
 })
 
 // Request interceptor
