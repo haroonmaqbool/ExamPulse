@@ -939,15 +939,6 @@ export default function LandingPage() {
         </span>
       </motion.button>
 
-      {/* FAQ Section */}
-      <section className={`relative z-10 py-16 px-6 lg:px-8 border-t ${
-        isDark
-          ? 'border-white/10 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent'
-          : 'border-gray-200 bg-gradient-to-b from-transparent via-blue-50/30 to-transparent'
-      }`}>
-        <FAQ isDark={isDark} />
-      </section>
-
       {/* Footer */}
       <footer className="relative z-10 py-16 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
